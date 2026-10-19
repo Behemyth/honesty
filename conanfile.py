@@ -1,7 +1,5 @@
-
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain
 from conan.tools.files import copy
-
 from conanfile_base import CPPythonBase
 
 
@@ -40,7 +38,7 @@ class AutoPackage(CPPythonBase):
 
     def package_info(self):
         self.cpp_info.set_property("cmake_find_mode", "none")
-        self.cpp_info.builddirs = ["."]
+        self.cpp_info.builddirs = ["lib/cmake/honesty"]
 
     def export_sources(self):
         copy(

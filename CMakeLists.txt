@@ -114,6 +114,7 @@ install(EXPORT honestyTargets
 	FILE honestyTargets.cmake
 	NAMESPACE synodic::
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/honesty
+	CXX_MODULES_DIRECTORY cxx-modules
 )
 
 install(
