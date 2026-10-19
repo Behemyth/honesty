@@ -77,6 +77,36 @@
                 "noTestsAction": "error",
                 "stopOnFailure": true
             }
+        },
+        {
+            "name": "default-release",
+            "description": "Run tests for release configuration",
+            "configurePreset": "default-release"
+        },
+        {
+            "name": "default-debug",
+            "description": "Run tests for debug configuration",
+            "configurePreset": "default-debug"
+        },
+        {
+            "name": "default-bench-release",
+            "description": "Run benchmark tests for release configuration",
+            "configurePreset": "default-release",
+            "filter": {
+                "include": {
+                    "label": "benchmark"
+                }
+            }
+        },
+        {
+            "name": "default-bench-debug",
+            "description": "Run benchmark tests for debug configuration",
+            "configurePreset": "default-debug",
+            "filter": {
+                "include": {
+                    "label": "benchmark"
+                }
+            }
         }
     ]
 }
