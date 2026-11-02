@@ -12,6 +12,22 @@ import std;
 
 namespace honesty::utility
 {
+	namespace
+	{
+		// The result is used immediately and never stored, so MSVC's getenv deprecation does not apply
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#endif
+		auto Environment(const char* name) -> const char*
+		{
+			return std::getenv(name);
+		}
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+	}
+
 	/**
 	 * @brief Get the base directory for storing Honesty application data.
 	 *
@@ -28,35 +44,35 @@ namespace honesty::utility
 	export auto DataDirectory() -> std::filesystem::path
 	{
 		// Check environment variable first
-		if (const char* envDir = std::getenv("HONESTY_DATA_DIR"))
+		if (const char* envDir = Environment("HONESTY_DATA_DIR"))
 		{
 			return std::filesystem::path(envDir);
 		}
 
 #if defined(_WIN32)
 		// Windows: Use LOCALAPPDATA
-		if (const char* localAppData = std::getenv("LOCALAPPDATA"))
+		if (const char* localAppData = Environment("LOCALAPPDATA"))
 		{
 			return std::filesystem::path(localAppData) / "honesty";
 		}
 		// Fallback to APPDATA if LOCALAPPDATA is not available
-		if (const char* appData = std::getenv("APPDATA"))
+		if (const char* appData = Environment("APPDATA"))
 		{
 			return std::filesystem::path(appData) / "honesty";
 		}
 #elif defined(__APPLE__)
 		// macOS: Use ~/Library/Application Support
-		if (const char* home = std::getenv("HOME"))
+		if (const char* home = Environment("HOME"))
 		{
 			return std::filesystem::path(home) / "Library" / "Application Support" / "honesty";
 		}
 #else
 		// Linux/Unix: Use XDG_DATA_HOME or fallback to ~/.local/share
-		if (const char* xdgData = std::getenv("XDG_DATA_HOME"))
+		if (const char* xdgData = Environment("XDG_DATA_HOME"))
 		{
 			return std::filesystem::path(xdgData) / "honesty";
 		}
-		if (const char* home = std::getenv("HOME"))
+		if (const char* home = Environment("HOME"))
 		{
 			return std::filesystem::path(home) / ".local" / "share" / "honesty";
 		}

@@ -37,7 +37,7 @@ namespace honesty::log
 		{
 		}
 
-		virtual void SetFormatter(Formatter* formatter)
+		virtual void SetFormatter([[maybe_unused]] Formatter* formatter)
 		{
 		}
 

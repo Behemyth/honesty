@@ -34,7 +34,7 @@ namespace
 				}
 			};
 
-			co_yield "is_trivially_constructible"_test = [](const Requirements& requirements)
+			co_yield "is_trivially_constructible"_test = [](const Requirements&)
 			{
 				// Tracer should be trivially constructible
 				static_assert(std::is_trivially_constructible_v<honesty::trace::Tracer>);

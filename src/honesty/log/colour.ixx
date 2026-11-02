@@ -225,7 +225,7 @@ namespace honesty::log
 			{
 				if (const std::uint8_t mask = static_cast<std::uint8_t>(1 << index); attributeMask & mask)
 				{
-					next = std::format_to(next, "\x1b[{}m", ConvertIndexToAnsiCode(index));
+					next = std::format_to(next, "\x1b[{}m", ConvertIndexToAnsiCode(static_cast<std::uint8_t>(index)));
 				}
 			}
 		}

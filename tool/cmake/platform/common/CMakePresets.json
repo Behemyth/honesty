@@ -15,6 +15,10 @@
                 "CMAKE_CONFIGURATION_TYPES": {
                     "type": "STRING",
                     "value": "Debug;Development;Release"
+                },
+                "CMAKE_COMPILE_WARNING_AS_ERROR": {
+                    "type": "BOOL",
+                    "value": "$env{SYNODIC_STRICT_WARNINGS}"
                 }
             }
         },
@@ -81,16 +85,19 @@
         {
             "name": "default-release",
             "description": "Run tests for release configuration",
+            "inherits": "default",
             "configurePreset": "default-release"
         },
         {
             "name": "default-debug",
             "description": "Run tests for debug configuration",
+            "inherits": "default",
             "configurePreset": "default-debug"
         },
         {
             "name": "default-bench-release",
             "description": "Run benchmark tests for release configuration",
+            "inherits": "default",
             "configurePreset": "default-release",
             "filter": {
                 "include": {
@@ -101,6 +108,7 @@
         {
             "name": "default-bench-debug",
             "description": "Run benchmark tests for debug configuration",
+            "inherits": "default",
             "configurePreset": "default-debug",
             "filter": {
                 "include": {

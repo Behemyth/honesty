@@ -79,7 +79,7 @@ namespace honesty::test
 			ReportFailureSummary(relation, event.a, event.b);
 		}
 
-		Output Summarize(const event::TestEnd& event)
+		Output Summarize(const event::TestEnd&)
 		{
 			return output_;
 		}
@@ -226,7 +226,7 @@ namespace honesty::test
 
 		void Signal(const event::TestBegin& event)
 		{
-			TestState& state = testStates_.emplace_back(event, logger_);
+			testStates_.emplace_back(event, logger_);
 		}
 
 		void Signal(const event::TestEnd& event)
@@ -294,7 +294,7 @@ namespace honesty::test
 			state.Signal(event);
 		}
 
-		Output Summarize(const event::SuiteEnd& event)
+		Output Summarize(const event::SuiteEnd&)
 		{
 			return output_;
 		}
@@ -492,8 +492,8 @@ namespace honesty::test
 			}
 
 			std::string benchmarkStyled = format(BENCHMARK_STYLE, "Benchmark");
-			std::string nameStyled = format(BENCHMARK_NAME_STYLE, "{}", event.groupName);
-			logger.Info("{}: {}", benchmarkStyled, nameStyled);
+			std::string groupStyled = format(BENCHMARK_NAME_STYLE, "{}", event.groupName);
+			logger.Info("{}: {}", benchmarkStyled, groupStyled);
 
 			for (const auto& entry: event.entries)
 			{

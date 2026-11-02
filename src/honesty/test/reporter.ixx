@@ -20,31 +20,31 @@ namespace honesty::test
 
 		~StreamingAdapter() override = default;
 
-		void Signal(const event::Initialize& event) override
+		void Signal(const event::Initialize&) override
 		{
 		}
 
-		void Signal(const event::SuiteBegin& event) override
+		void Signal(const event::SuiteBegin&) override
 		{
 		}
 
-		void Signal(const event::SuiteEnd& event) override
+		void Signal(const event::SuiteEnd&) override
 		{
 		}
 
-		void Signal(const event::TestBegin& event) override
+		void Signal(const event::TestBegin&) override
 		{
 		}
 
-		void Signal(const event::TestEnd& event) override
+		void Signal(const event::TestEnd&) override
 		{
 		}
 
-		void Signal(const event::TestSkip& event) override
+		void Signal(const event::TestSkip&) override
 		{
 		}
 
-		void Signal(const event::AssertionFail& event) override
+		void Signal(const event::AssertionFail&) override
 		{
 		}
 
@@ -60,23 +60,23 @@ namespace honesty::test
 			Signal(static_cast<event::AssertionFail>(event));
 		}
 
-		void Signal(const event::AssertionPass& event) override
+		void Signal(const event::AssertionPass&) override
 		{
 		}
 
-		void Signal(const event::AssertionSkip& event) override
+		void Signal(const event::AssertionSkip&) override
 		{
 		}
 
-		void Signal(const event::Summary& event) override
+		void Signal(const event::Summary&) override
 		{
 		}
 
-		void Signal(const event::BenchmarkComplete& event) override
+		void Signal(const event::BenchmarkComplete&) override
 		{
 		}
 
-		void Signal(const event::BenchmarkGroupComplete& event) override
+		void Signal(const event::BenchmarkGroupComplete&) override
 		{
 		}
 	};
@@ -113,7 +113,7 @@ namespace honesty::test
 
 		~CumulativeAdapter() override = default;
 
-		void Signal(const event::Initialize& event) final
+		void Signal(const event::Initialize&) final
 		{
 		}
 
@@ -145,40 +145,40 @@ namespace honesty::test
 			testData.name		 = event.name;
 		}
 
-		void Signal(const event::TestSkip& event) final
+		void Signal(const event::TestSkip&) final
 		{
 		}
 
-		void Signal(const event::AssertionFail& event) final
+		void Signal(const event::AssertionFail&) final
 		{
 		}
 
-		void Signal(const event::EqualityFail& event) final
+		void Signal(const event::EqualityFail&) final
 		{
 		}
 
-		void Signal(const event::ComparisonFail& event) final
+		void Signal(const event::ComparisonFail&) final
 		{
 		}
 
-		void Signal(const event::AssertionPass& event) final
+		void Signal(const event::AssertionPass&) final
 		{
 		}
 
-		void Signal(const event::AssertionSkip& event) final
+		void Signal(const event::AssertionSkip&) final
 		{
 		}
 
-		void Signal(const event::Summary& event) final
+		void Signal(const event::Summary&) final
 		{
 			Finalize(std::move(data_));
 		}
 
-		void Signal(const event::BenchmarkComplete& event) final
+		void Signal(const event::BenchmarkComplete&) final
 		{
 		}
 
-		void Signal(const event::BenchmarkGroupComplete& event) final
+		void Signal(const event::BenchmarkGroupComplete&) final
 		{
 		}
 

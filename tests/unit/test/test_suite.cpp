@@ -10,7 +10,7 @@ namespace
 		"suite",
 		[](const Fixture& fixture) -> Generator
 		{
-			co_yield "name"_test = [&](const Requirements& requirements)
+			co_yield "name"_test = [&](const Requirements&)
 			{
 
 			};

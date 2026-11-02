@@ -12,7 +12,7 @@ namespace honesty::log
 	public:
 		constexpr Console() = default;
 
-		void LogV(LevelType level, const std::string_view fmt, const std::format_args args) override
+		void LogV([[maybe_unused]] LevelType level, const std::string_view fmt, const std::format_args args) override
 		{
 			std::println("{}", std::vformat(fmt, args));
 		}

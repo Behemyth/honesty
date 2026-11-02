@@ -31,8 +31,8 @@ namespace
 				honesty::trace::Provider<TestCategory> provider;
 
 				// Can get tracers by category
-				const auto& first = provider.Get<TestCategory::FIRST>();
-				const auto& second = provider.Get<TestCategory::SECOND>();
+				[[maybe_unused]] const auto& first = provider.Get<TestCategory::FIRST>();
+				[[maybe_unused]] const auto& second = provider.Get<TestCategory::SECOND>();
 
 				// Both should be Tracer instances
 				static_assert(std::is_same_v<std::decay_t<decltype(first)>, honesty::trace::Tracer>);

@@ -11,13 +11,14 @@ namespace honesty::log
 	class SynchronizedSink : public Sink
 	{
 	public:
-		explicit SynchronizedSink(LevelType level = LevelType::DEFER)
+		explicit SynchronizedSink(LevelType level = LevelType::DEFER) :
+			Sink(level)
 		{
 		}
 
 		~SynchronizedSink() override = default;
 
-		void LogV(const LevelType level, const std::string_view fmt, const std::format_args args) final
+		void LogV(LevelType level, std::string_view fmt, std::format_args args) final
 		{
 			std::lock_guard<Mutex> lock(mutex_);
 			SynchronizedLogV(level, fmt, args);
@@ -42,7 +43,7 @@ namespace honesty::log
 		{
 		}
 
-		virtual void SynchronizedSetFormatter(Formatter* formatter)
+		virtual void SynchronizedSetFormatter([[maybe_unused]] Formatter* formatter)
 		{
 		}
 

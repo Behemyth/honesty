@@ -35,7 +35,7 @@ namespace
 			co_yield "log_compile_time_level"_test = [](const Requirements& requirements)
 			{
 				// Verify the compile-time log level is accessible
-				constexpr auto level = honesty::log::CompileTimeLogLevel;
+				[[maybe_unused]] constexpr auto level = honesty::log::CompileTimeLogLevel;
 
 				// IsLevelEnabled should be consteval
 				static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::CRITICAL) ||

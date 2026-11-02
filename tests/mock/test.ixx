@@ -201,7 +201,7 @@ public:
 		events_.emplace_back(StoredAssertionPass{event.location});
 	}
 
-	void Signal(const event::AssertionSkip& event) override
+	void Signal(const event::AssertionSkip&) override
 	{
 		events_.emplace_back(StoredAssertionSkip{});
 	}

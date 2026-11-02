@@ -93,10 +93,10 @@ namespace honesty::test::api
 			auto& resultSuite = result.suites.emplace_back();
 			resultSuite.name  = name;
 
-			for (const auto& [name, subTests]: tests)
+			for (const auto& [testName, subTests]: tests)
 			{
 				TestDescription description;
-				description.name = name;
+				description.name = testName;
 
 				resultSuite.tests.push_back(description);
 			}

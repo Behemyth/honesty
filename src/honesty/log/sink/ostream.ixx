@@ -16,7 +16,7 @@ namespace honesty::log
 		{
 		}
 
-		void SynchronizedLogV(LevelType level, const std::string_view fmt, const std::format_args args) override
+		void SynchronizedLogV([[maybe_unused]] LevelType level, const std::string_view fmt, const std::format_args args) override
 		{
 			stream_.get() << std::vformat(fmt, args);
 		}

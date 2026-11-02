@@ -10,10 +10,10 @@ namespace
 		"test_log",
 		[](Fixture& fixture) -> Generator
 		{
-			const std::stringstream& stream = fixture.AttachListener(honesty::log::LevelType::TRACE);
+			[[maybe_unused]] const std::stringstream& stream = fixture.AttachListener(honesty::log::LevelType::TRACE);
 
 			// Verify that you can capture the information going into the suite logger
-			co_yield "test"_test = [](const Requirements& requirements)
+			co_yield "test"_test = [](const Requirements&)
 			{
 			};
 		});

@@ -163,7 +163,7 @@ namespace honesty::metric
 			 */
 			bool Push(const Duration& duration)
 			{
-				const double elapsed = duration.count();
+				const auto elapsed = static_cast<double>(duration.count());
 				totalDuration		+= duration;
 
 				// lastIterationCount is updated during Iterate()

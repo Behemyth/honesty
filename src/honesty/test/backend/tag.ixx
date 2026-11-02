@@ -186,7 +186,7 @@ namespace honesty::test
 		{
 			BenchmarkTag tag;
 			tag.tags_ = tags_;
-			tag.size_ = size_ + other.Size();
+			tag.size_ = static_cast<decltype(tag.size_)>(size_ + other.Size());
 
 			std::ranges::copy(other.begin(), other.end(), tag.tags_.begin() + size_);
 
@@ -264,7 +264,7 @@ namespace honesty::test
 	{
 		BenchmarkTag tag;
 		tag.tags_ = tags_;
-		tag.size_ = size_ + other.Size();
+		tag.size_ = static_cast<decltype(tag.size_)>(size_ + other.Size());
 
 		std::ranges::copy(other.begin(), other.end(), tag.tags_.begin() + size_);
 

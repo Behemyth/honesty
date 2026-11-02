@@ -126,7 +126,7 @@ namespace honesty::test
 			const std::string_view name,
 			const Tag& tag,
 			const std::function_ref<void(const Requirements&)>& test,
-			std::string_view description = "") :
+			[[maybe_unused]] std::string_view description = "") :
 			name_(name),
 			test_(test),
 			tag_(tag)
@@ -138,7 +138,7 @@ namespace honesty::test
 			const std::string_view name,
 			const Tag& tag,
 			const std::function_ref<Generator(const Requirements&)>& test,
-			std::string_view description = "") :
+			[[maybe_unused]] std::string_view description = "") :
 			name_(name),
 			test_(test),
 			tag_(tag)
@@ -150,7 +150,7 @@ namespace honesty::test
 			const std::string_view name,
 			const Tag& tag,
 			const std::function_ref<Generator()>& test,
-			std::string_view description = "") :
+			[[maybe_unused]] std::string_view description = "") :
 			name_(name),
 			test_(test),
 			tag_(tag)
@@ -165,7 +165,7 @@ namespace honesty::test
 			const std::string_view name,
 			const Tag& tag,
 			const std::function_ref<void(metric::RegressionContext&)>& benchmark,
-			std::string_view description = "") :
+			[[maybe_unused]] std::string_view description = "") :
 			name_(name),
 			test_(benchmark),
 			tag_(tag)
@@ -180,7 +180,7 @@ namespace honesty::test
 			const std::string_view name,
 			const Tag& tag,
 			const std::function_ref<BenchmarkGenerator()>& benchmarkGroup,
-			std::string_view description = "") :
+			[[maybe_unused]] std::string_view description = "") :
 			name_(name),
 			test_(benchmarkGroup),
 			tag_(tag)

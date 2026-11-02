@@ -43,7 +43,7 @@ namespace honesty::test
 	 */
 	export class Fixture final
 	{
-		friend class SuiteContext;
+		friend struct SuiteContext;
 
 	public:
 		~Fixture()
@@ -145,7 +145,7 @@ namespace honesty::test
 		 * @param logger A new logger object to take ownership of.
 		 */
 		Fixture(
-			const std::span<Reporter*> reporters,
+			[[maybe_unused]] const std::span<Reporter*> reporters,
 			const std::string_view applicationName,
 			const std::string_view suiteName,
 			log::Logger& logger) :

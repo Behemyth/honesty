@@ -152,7 +152,7 @@ namespace honesty::test::api
 
 	bool HandleCallback(
 		Runner& runner,
-		const TestData& testData,
+		[[maybe_unused]] const TestData& testData,
 		const TestContext& testContext,
 		const std::function_ref<Generator()>& testCallback)
 	{
