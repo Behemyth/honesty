@@ -44,6 +44,15 @@ add_subdirectory(
 	unit
 )
 
+# One CTest test per top-level Honesty test, discovered from 'tests list' when ctest runs
+discover_tests(COMMAND tests
+	DISCOVERY_ARGS list
+	DISCOVERY_MATCH "^([^. ]+)\\.([^ ]+)$"
+	TEST_NAME "\\1.\\2"
+	TEST_ARGS --filter "\\1.\\2"
+	BUILD_DEPENDS tests
+)
+
 # Glob all files to add a source group tree
 file(GLOB_RECURSE file_list ${CMAKE_CURRENT_SOURCE_DIR}/*)
 

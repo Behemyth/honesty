@@ -43,51 +43,54 @@ namespace
 		"terminal",
 		[]() -> Generator
 		{
-			// Only run these tests if the terminal supports colour
-			if (log::SupportsColour())
+			// Styled output is only produced when the terminal supports colour, otherwise the tests report as skipped
+			const Tag tag = log::SupportsColour() ? RUN : SKIP;
+
+			const auto formatTo = [](const Requirements& requirements)
 			{
-				co_yield "format_to"_test = [](const Requirements& requirements)
-				{
-					std::string output;
-					constexpr log::TextStyle style(log::Colour24(58, 90, 64));
-					log::format_to(std::back_inserter(output), style, "{} = (58,90,64)", "Hunter Green");
+				std::string output;
+				constexpr log::TextStyle style(log::Colour24(58, 90, 64));
+				log::format_to(std::back_inserter(output), style, "{} = (58,90,64)", "Hunter Green");
 
-					std::string input("Hunter Green = (58,90,64)");
-					std::string expected;
-					std::format_to(std::back_inserter(expected), "\x1b[38;2;058;090;064m{}\x1b[0m", input);
+				std::string input("Hunter Green = (58,90,64)");
+				std::string expected;
+				std::format_to(std::back_inserter(expected), "\x1b[38;2;058;090;064m{}\x1b[0m", input);
 
-					requirements.ExpectEquals(output, expected);
-				};
+				requirements.ExpectEquals(output, expected);
+			};
 
-				co_yield "format"_test = [](const Requirements& requirements)
-				{
-					const std::string output =
-						format(log::TextStyle(log::Colour24(58, 90, 64)), "Hunter Green = (58,90,64)");
+			const auto formatted = [](const Requirements& requirements)
+			{
+				const std::string output =
+					format(log::TextStyle(log::Colour24(58, 90, 64)), "Hunter Green = (58,90,64)");
 
-					std::string input("Hunter Green = (58,90,64)");
-					const std::string expected = std::format("\x1b[38;2;058;090;064m{}\x1b[0m", input);
+				std::string input("Hunter Green = (58,90,64)");
+				const std::string expected = std::format("\x1b[38;2;058;090;064m{}\x1b[0m", input);
 
-					requirements.ExpectEquals(output, expected);
-				};
+				requirements.ExpectEquals(output, expected);
+			};
 
-				co_yield "print"_test = [](const Requirements& requirements)
-				{
-					// Test that format produces expected ANSI escape sequences
-					constexpr log::Colour24 red(255, 0, 0);
-					constexpr log::TextStyle redStyle(red);
+			const auto print = [](const Requirements& requirements)
+			{
+				// Test that format produces expected ANSI escape sequences
+				constexpr log::Colour24 red(255, 0, 0);
+				constexpr log::TextStyle redStyle(red);
 
-					std::string output = format(redStyle, "error");
-					std::string expected = std::format("\x1b[38;2;255;000;000m{}\x1b[0m", "error");
+				std::string output = format(redStyle, "error");
+				std::string expected = std::format("\x1b[38;2;255;000;000m{}\x1b[0m", "error");
 
-					requirements.ExpectEquals(output, expected);
+				requirements.ExpectEquals(output, expected);
 
-					// Test with format arguments
-					std::string output2 = format(redStyle, "value: {}", 42);
-					std::string expected2 = std::format("\x1b[38;2;255;000;000m{}\x1b[0m", "value: 42");
+				// Test with format arguments
+				std::string output2 = format(redStyle, "value: {}", 42);
+				std::string expected2 = std::format("\x1b[38;2;255;000;000m{}\x1b[0m", "value: 42");
 
-					requirements.ExpectEquals(output2, expected2);
-				};
-			}
+				requirements.ExpectEquals(output2, expected2);
+			};
+
+			co_yield Test("format_to", tag, formatTo);
+			co_yield Test("format", tag, formatted);
+			co_yield Test("print", tag, print);
 		});
 
 	SuiteRegistrar _(STYLE_SUITE, COLOR_SUITE, TERMINAL_SUITE);

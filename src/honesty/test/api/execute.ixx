@@ -418,7 +418,8 @@ namespace honesty::test::api
 		return success;
 	}
 
-	bool ProcessSuite(Runner& runner, const SuiteData& suite, SuiteContext& suiteContext)
+	// Sets selected when the filter selects this suite and, if the filter names a test, one of its top-level tests
+	bool ProcessSuite(Runner& runner, const SuiteData& suite, SuiteContext& suiteContext, bool& selected)
 	{
 		auto suiteSpan = TestTracer.CreateSpan("ProcessSuite");
 		suiteSpan.SetAttribute("suite_name", suite.Name());
@@ -471,9 +472,19 @@ namespace honesty::test::api
 
 			Generator generator = std::visit(executor, suite.Variant());
 
+			if (filter.empty())
+			{
+				selected = true;
+			}
+
 			for (const Test& test: generator)
 			{
 				const auto& view = static_cast<TestData>(test);
+
+				if (not filter.empty() and view.Name() == filter.front())
+				{
+					selected = true;
+				}
 
 				bool testSuccess = true;
 
@@ -572,6 +583,9 @@ namespace honesty::test::api
 			reporter->Signal(initialize);
 		}
 
+		// A run that selects nothing is a failure, so a stale filter or an empty binary cannot pass silently
+		bool selected = false;
+
 		metric::Duration duration;
 		{
 			metric::Timer timer(duration);
@@ -586,8 +600,17 @@ namespace honesty::test::api
 					parameters.dryRun,
 					parameters.runBenchmarks);
 
-				success |= ProcessSuite(runner, suite, suiteContext);
+				if (not ProcessSuite(runner, suite, suiteContext, selected))
+				{
+					success = false;
+				}
 			}
+		}
+
+		if (not selected)
+		{
+			ExecuteLogger().Error("No tests matched filter '{}'", parameters.filter);
+			success = false;
 		}
 
 		event::Summary summary;

@@ -122,6 +122,7 @@ namespace honesty::test
 			auto& [name, tests] = data_.suites.emplace_back();
 
 			name = event.name;
+			path_.clear();
 		}
 
 		void Signal(const event::SuiteEnd& event) final
@@ -133,16 +134,23 @@ namespace honesty::test
 
 		void Signal(const event::TestBegin& event) final
 		{
-			SuiteData& suiteData = data_.suites.back();
-			TestData& testData	 = suiteData.tests.emplace_back();
-			testData.name		 = event.name;
+			// Nested tests are recorded beneath the test that is currently open
+			std::vector<TestData>* siblings = &data_.suites.back().tests;
+			for (const std::size_t index: path_)
+			{
+				siblings = &(*siblings)[index].subTests;
+			}
+
+			path_.push_back(siblings->size());
+			siblings->emplace_back().name = event.name;
 		}
 
-		void Signal(const event::TestEnd& event) final
+		void Signal(const event::TestEnd&) final
 		{
-			SuiteData& suiteData = data_.suites.back();
-			TestData& testData	 = suiteData.tests.back();
-			testData.name		 = event.name;
+			if (not path_.empty())
+			{
+				path_.pop_back();
+			}
 		}
 
 		void Signal(const event::TestSkip&) final
@@ -186,6 +194,9 @@ namespace honesty::test
 
 	private:
 		CumulativeData data_;
+
+		// Indices from the suite's top-level tests down to the currently open test
+		std::vector<std::size_t> path_;
 	};
 
 	template<typename T>
