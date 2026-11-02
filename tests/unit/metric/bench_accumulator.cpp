@@ -268,7 +268,7 @@ namespace
 
 					ctx.Measure([&]()
 					{
-						auto mean = accumulator.get<peri::statistics::mean>().result();
+						auto mean = accumulator.Get<peri::statistics::Mean>().Result();
 						DoNotOptimize(mean);
 					});
 				};
@@ -320,7 +320,7 @@ namespace
 
 					ctx.Measure([&]()
 					{
-						auto variance = accumulator.get<peri::statistics::variance>().result();
+						auto variance = accumulator.Get<peri::statistics::Variance>().Result();
 						DoNotOptimize(variance);
 					});
 				};
@@ -388,11 +388,11 @@ namespace
 
 					ctx.Measure([&]()
 					{
-						auto count = accumulator.get<peri::statistics::count>().result();
-						auto mean = accumulator.get<peri::statistics::mean>().result();
-						auto variance = accumulator.get<peri::statistics::variance>().result();
-						auto min = accumulator.get<peri::statistics::min>().result();
-						auto max = accumulator.get<peri::statistics::max>().result();
+						auto count = accumulator.Get<peri::statistics::Count>().Result();
+						auto mean = accumulator.Get<peri::statistics::Mean>().Result();
+						auto variance = accumulator.Get<peri::statistics::Variance>().Result();
+						auto min = accumulator.Get<peri::statistics::Min>().Result();
+						auto max = accumulator.Get<peri::statistics::Max>().Result();
 						DoNotOptimize(count);
 						DoNotOptimize(mean);
 						DoNotOptimize(variance);

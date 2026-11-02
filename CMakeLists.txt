@@ -1,7 +1,4 @@
-cmake_minimum_required(VERSION 4.0 FATAL_ERROR)
-
-# Enable std module support for MSVC - MUST be before project()
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
+cmake_minimum_required(VERSION 4.5 FATAL_ERROR)
 
 set(CMAKE_CXX_MODULE_STD ON)
 

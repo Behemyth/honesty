@@ -12,12 +12,12 @@ namespace honesty::metric
 	 */
 	export using BenchmarkAccumulator = peri::statistics::Accumulator<
 		double,
-		peri::statistics::count,
-		peri::statistics::sum,
-		peri::statistics::mean,
-		peri::statistics::variance,
-		peri::statistics::min,
-		peri::statistics::max>;
+		peri::statistics::Count,
+		peri::statistics::Sum,
+		peri::statistics::Mean,
+		peri::statistics::Variance,
+		peri::statistics::Min,
+		peri::statistics::Max>;
 
 	/**
 	 * @brief A duration type using double representation for statistical calculations.
@@ -112,19 +112,19 @@ namespace honesty::metric
 			Duration duration)
 		{
 			iterations    = totalIterations;
-			samples       = accumulator.get<peri::statistics::count>().result();
+			samples       = accumulator.Get<peri::statistics::Count>().Result();
 			totalDuration = duration;
 
-			mean     = StatsDuration(accumulator.get<peri::statistics::mean>().result());
-			variance = StatsDuration(accumulator.get<peri::statistics::variance>().result());
-			stddev   = StatsDuration(accumulator.get<peri::statistics::variance>().stddev());
+			mean     = StatsDuration(accumulator.Get<peri::statistics::Mean>().Result());
+			variance = StatsDuration(accumulator.Get<peri::statistics::Variance>().Result());
+			stddev   = StatsDuration(accumulator.Get<peri::statistics::Variance>().StdDev());
 
-			if (const auto minResult = accumulator.get<peri::statistics::min>().result())
+			if (const auto minResult = accumulator.Get<peri::statistics::Min>().Result())
 			{
 				min = StatsDuration(*minResult);
 			}
 
-			if (const auto maxResult = accumulator.get<peri::statistics::max>().result())
+			if (const auto maxResult = accumulator.Get<peri::statistics::Max>().Result())
 			{
 				max = StatsDuration(*maxResult);
 			}

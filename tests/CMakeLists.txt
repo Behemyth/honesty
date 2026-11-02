@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31 FATAL_ERROR)
+cmake_minimum_required(VERSION 4.5 FATAL_ERROR)
 
 project(tests
 	DESCRIPTION "Tests for the honesty project"

@@ -122,13 +122,13 @@ namespace honesty::test
 				[&function](auto&&... args) -> Generator
 				{
 					int index = 0;
-					(co_yield Test(
+					((co_yield Test(
 							std::format("{}", index++),
 							Tag(),
 							[&function, &args](const Requirements& requirements)
 							{
 								function(requirements, args);
-							}),
+							})),
 						...);
 				},
 				std::forward<std::tuple<Types...>>(tuple)));
