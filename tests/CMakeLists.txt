@@ -66,3 +66,27 @@ set_property(
 	PROPERTY
 	VS_STARTUP_PROJECT tests
 )
+
+if(CMAKE_CONFIGURATION_TYPES)
+	set(_test_is_multi_config ON)
+else()
+	set(_test_is_multi_config OFF)
+endif()
+set(_test_dependency_build_type "$<IF:$<STREQUAL:$<CONFIG>,Development>,Debug,$<CONFIG>>")
+
+add_test(
+	NAME test_package_consumer
+	COMMAND ${CMAKE_COMMAND}
+		"-DTEST_PROJECT_BINARY_DIR=${CMAKE_BINARY_DIR}"
+		"-DTEST_SOURCE_DIR=${CMAKE_SOURCE_DIR}/test_package"
+		"-DTEST_GENERATORS_DIR=${CMAKE_SOURCE_DIR}/build/conan/${_test_dependency_build_type}/generators"
+		"-DTEST_GENERATOR=${CMAKE_GENERATOR}"
+		"-DTEST_GENERATOR_PLATFORM=${CMAKE_GENERATOR_PLATFORM}"
+		"-DTEST_GENERATOR_TOOLSET=${CMAKE_GENERATOR_TOOLSET}"
+		"-DTEST_CONFIG=$<CONFIG>"
+		"-DTEST_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+		"-DTEST_IS_MULTI_CONFIG=${_test_is_multi_config}"
+		"-DTEST_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+		"-DTEST_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
+		-P "${CMAKE_CURRENT_LIST_DIR}/test_package.cmake"
+)

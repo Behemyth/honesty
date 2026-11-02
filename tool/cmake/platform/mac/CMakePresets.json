@@ -29,6 +29,52 @@
 			"inherits": [
 				"macos-default"
 			]
+		},
+		{
+			"name": "macos-ninja-clang-release",
+			"inherits": [
+				"cppython-release",
+				"macos-ninja-clang"
+			],
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Release"
+				}
+			}
+		},
+		{
+			"name": "macos-ninja-clang-development",
+			"inherits": [
+				"cppython-debug",
+				"macos-ninja-clang"
+			],
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Development"
+				},
+				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
+					"type": "STRING",
+					"value": "Debug"
+				}
+			}
+		},
+		{
+			"name": "macos-ninja-clang-debug",
+			"inherits": [
+				"cppython-debug",
+				"macos-ninja-clang"
+			],
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": {
+					"type": "STRING",
+					"value": "Debug"
+				}
+			}
 		}
 	],
 	"buildPresets": [
@@ -44,7 +90,7 @@
 		{
 			"name": "macos-ninja-clang-release",
 			"displayName": "Ninja Clang Release",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-release",
 			"configuration": "Release",
 			"inherits": [
 				"macos-default"
@@ -53,7 +99,7 @@
 		{
 			"name": "macos-ninja-clang-development",
 			"displayName": "Ninja Clang Development",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-development",
 			"configuration": "Development",
 			"inherits": [
 				"macos-default"
@@ -62,7 +108,7 @@
 		{
 			"name": "macos-ninja-clang-debug",
 			"displayName": "Ninja Clang Debug",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-debug",
 			"configuration": "Debug",
 			"inherits": [
 				"macos-default"
@@ -84,7 +130,7 @@
 		{
 			"name": "macos-ninja-clang-debug",
 			"displayName": "Ninja Clang Debug",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-debug",
 			"inherits": [
 				"macos-default"
 			],
@@ -93,7 +139,7 @@
 		{
 			"name": "macos-ninja-clang-development",
 			"displayName": "Ninja Clang Development",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-development",
 			"inherits": [
 				"macos-default"
 			],
@@ -102,7 +148,7 @@
 		{
 			"name": "macos-ninja-clang-release",
 			"displayName": "Ninja Clang Release",
-			"configurePreset": "macos-ninja-clang",
+			"configurePreset": "macos-ninja-clang-release",
 			"inherits": [
 				"macos-default"
 			],

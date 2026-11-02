@@ -28,6 +28,7 @@
             "hidden": true,
             "inherits": [
                 "cppython",
+                "cppython-release",
                 "default"
             ],
             "binaryDir": "${sourceDir}/../../../../build",
@@ -41,6 +42,7 @@
             "hidden": true,
             "inherits": [
                 "cppython",
+                "cppython-debug",
                 "default"
             ],
             "binaryDir": "${sourceDir}/../../../../build",

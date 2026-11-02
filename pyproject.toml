@@ -31,6 +31,9 @@ dependencies = [
 	"periapsis>=0.0.0.dev",
 ]
 
+[tool.cppython.dependency-groups]
+test = []
+
 [tool.cppython.generators.cmake]
 preset_file = "tool/cmake/platform/common/CMakePresets.json"
 configuration_name = "default"
