@@ -117,3 +117,16 @@ install(
 	${CMAKE_CURRENT_BINARY_DIR}/honestyConfigVersion.cmake
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/honesty
 )
+
+# Build-tree package for local-source (editable) consumers. It mirrors the installed
+# lib/cmake/honesty layout, so a local checkout resolves through the same path as the package.
+set(honesty_BUILD_PACKAGE_DIR ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake/honesty)
+
+export(EXPORT honestyTargets
+	FILE ${honesty_BUILD_PACKAGE_DIR}/honestyTargets.cmake
+	NAMESPACE synodic::
+	CXX_MODULES_DIRECTORY cxx-modules
+)
+
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/honestyConfig.cmake ${honesty_BUILD_PACKAGE_DIR}/honestyConfig.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/honestyConfigVersion.cmake ${honesty_BUILD_PACKAGE_DIR}/honestyConfigVersion.cmake COPYONLY)

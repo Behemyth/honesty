@@ -13,3 +13,4 @@ __pypackages__/
 *.pdb
 /Testing
 CMakeUserPresets.json
+.cppython.toml
