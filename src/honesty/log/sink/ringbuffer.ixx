@@ -13,7 +13,10 @@ namespace honesty::log
 	public:
 		RingBuffer() = default;
 
-		void SynchronizedLogV(LevelType level, std::string_view fmt, std::format_args args) override
+		void SynchronizedLogV(
+			[[maybe_unused]] LevelType level,
+			[[maybe_unused]] std::string_view fmt,
+			[[maybe_unused]] std::format_args args) override
 		{
 		}
 

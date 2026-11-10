@@ -19,7 +19,7 @@ namespace honesty::log
 
 		void SynchronizedLogV(const LevelType level, const std::string_view fmt, std::format_args args) override
 		{
-			const Message message(level, std::format(fmt, args));
+			const Message message(level, std::vformat(fmt, args));
 			callback_(message);
 		}
 

@@ -58,7 +58,9 @@ namespace honesty::log
 		{
 			switch (level)
 			{
+				case LevelType::OFF :
 				case LevelType::DEFER :
+				case LevelType::COUNT :
 				{
 					return opentelemetry::logs::Severity::kInvalid;
 				}
