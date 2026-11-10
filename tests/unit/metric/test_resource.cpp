@@ -97,8 +97,8 @@ namespace
 				collector.Sample();
 
 				// Do some work to generate CPU usage
-				int sum = 0;
-				for (int i = 0; i < 100000; ++i)
+				std::uint64_t sum = 0;
+				for (std::uint64_t i = 0; i < 100000; ++i)
 				{
 					sum += i;
 				}
