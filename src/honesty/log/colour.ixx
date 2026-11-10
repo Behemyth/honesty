@@ -31,11 +31,7 @@ namespace
 		}
 #else
 		{
-			if (const char* term = std::getenv("TERM"))
-			{
-				return true;
-			}
-			return false;
+			return std::getenv("TERM") != nullptr;
 		}
 #endif
 	}();
@@ -219,7 +215,7 @@ namespace honesty::log
 
 		if (const std::uint8_t attributeMask = style.AttributeMask())
 		{
-			constexpr size_t attributeCount = std::numeric_limits<std::underlying_type_t<Attribute>>::digits;
+			constexpr int attributeCount = std::numeric_limits<std::underlying_type_t<Attribute>>::digits;
 
 			for (int index = 0; index < attributeCount; ++index)
 			{
@@ -328,9 +324,7 @@ namespace honesty::log
 	{
 		if (SupportsColour())
 		{
-			std::string data;
-			vformat_to_impl(std::back_inserter(data), style, fmt, args);
-			std::print(stream, "{}", data);
+			std::print(stream, "{}", vformat(style, fmt.get(), std::make_format_args(args...)));
 		}
 		else
 		{
