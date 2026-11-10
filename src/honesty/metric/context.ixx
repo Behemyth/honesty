@@ -264,9 +264,20 @@ namespace honesty::metric
 		};
 
 		/**
+		 * @brief Initializes the context with the default configuration
+		 *
+		 * A default argument cannot name Config here: its member initializers are not usable until
+		 * the enclosing class is complete.
+		 */
+		RegressionContext() :
+			RegressionContext(Config {})
+		{
+		}
+
+		/**
 		 * @brief Initializes the context to an estimated minimal fit of iterations/samples
 		 */
-		explicit RegressionContext(Config config = {}) :
+		explicit RegressionContext(Config config) :
 			TimedContext(GetClockResolution() * config.clockResolutionMultiple, config.maxTotalDuration),
 			config_(std::move(config))
 		{

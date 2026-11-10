@@ -23,7 +23,7 @@ std::string GenerateName(const std::string_view prefix, const std::size_t length
 
 	name.reserve(name.size() + length);
 
-	for (int iteration = 0; iteration < length; ++iteration)
+	for (std::size_t iteration = 0; iteration < length; ++iteration)
 	{
 		name += "0123456789ABCDEF"[distribution(device)];
 	}
