@@ -2,6 +2,7 @@ export module synodic.honesty.test.api:runner.standard;
 
 import std;
 import synodic.honesty.test;
+import synodic.honesty.log;
 import synodic.honesty.metric;
 
 import function_ref;

@@ -6,6 +6,7 @@ import function_ref;
 
 import synodic.honesty.metric;
 import synodic.honesty.test;
+import synodic.honesty.log;
 
 using namespace honesty::test;
 

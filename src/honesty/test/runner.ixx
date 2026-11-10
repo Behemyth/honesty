@@ -1,7 +1,7 @@
 
 export module synodic.honesty.test:runner;
 
-import synodic.honesty.test.backend;
+import synodic.honesty.log;
 import synodic.honesty.test.backend;
 
 import std;

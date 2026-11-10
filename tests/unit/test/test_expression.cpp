@@ -1,4 +1,5 @@
 import synodic.honesty.test;
+import synodic.honesty.log;
 
 import std;
 
