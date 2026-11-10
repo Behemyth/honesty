@@ -72,14 +72,15 @@ if(CMAKE_CONFIGURATION_TYPES)
 else()
 	set(_test_is_multi_config OFF)
 endif()
-set(_test_dependency_build_type "$<IF:$<STREQUAL:$<CONFIG>,Development>,Debug,$<CONFIG>>")
+# The consumer finds Honesty's dependencies through the project's own prepared includes.
+# A list cannot pass through a test command, so its separators are replaced.
+string(REPLACE ";" "|" _test_top_level_includes "${CMAKE_PROJECT_TOP_LEVEL_INCLUDES}")
 
 add_test(
 	NAME test_package_consumer
 	COMMAND ${CMAKE_COMMAND}
 		"-DTEST_PROJECT_BINARY_DIR=${CMAKE_BINARY_DIR}"
 		"-DTEST_SOURCE_DIR=${CMAKE_SOURCE_DIR}/test_package"
-		"-DTEST_GENERATORS_DIR=${CMAKE_SOURCE_DIR}/build/conan/${_test_dependency_build_type}/generators"
 		"-DTEST_GENERATOR=${CMAKE_GENERATOR}"
 		"-DTEST_GENERATOR_PLATFORM=${CMAKE_GENERATOR_PLATFORM}"
 		"-DTEST_GENERATOR_TOOLSET=${CMAKE_GENERATOR_TOOLSET}"
@@ -88,5 +89,13 @@ add_test(
 		"-DTEST_IS_MULTI_CONFIG=${_test_is_multi_config}"
 		"-DTEST_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
 		"-DTEST_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
+		"-DTEST_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+		"-DTEST_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
+		"-DTEST_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}"
+		"-DTEST_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
+		"-DTEST_TOP_LEVEL_INCLUDES=${_test_top_level_includes}"
+		"-DTEST_BUILD_IDENTITY=${SYNODIC_BUILD_IDENTITY}"
+		"-DTEST_DEPENDENCIES_ROOT=${SYNODIC_DEPENDENCIES_ROOT}"
+		"-DTEST_MAP_IMPORTED_CONFIG_DEVELOPMENT=${CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT}"
 		-P "${CMAKE_CURRENT_LIST_DIR}/test_package.cmake"
 )

@@ -1,42 +1,56 @@
 {
-	"version": 9,
+	"version": 10,
 	"include": [
 		"../common/CMakePresets.json"
 	],
 	"configurePresets": [
 		{
 			"name": "windows-default",
+			"hidden": true,
+			"description": "Base preset for Windows identities",
 			"inherits": [
 				"default"
 			],
-			"hidden": true,
-			"description": "Base preset for Windows configurations",
-			"condition": {
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
 			},
+			"cacheVariables": {
+				"CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/tool/cmake/platform/common/SetMSVCRuntime.cmake;${sourceDir}/tool/cmake/dependencies.cmake",
+				"CMAKE_MSVC_DEBUG_INFORMATION_FORMAT": "$<$<CONFIG:Debug,Development>:ProgramDatabase>"
+			}
+		},
+		{
+			"name": "windows-default-development",
+			"hidden": true,
+			"description": "Development configuration: optimized with debug info and assertions, Release ABI and dependencies",
+			"cacheVariables": {
+				"CMAKE_C_FLAGS_DEVELOPMENT": "/O2 /Ob2",
+				"CMAKE_CXX_FLAGS_DEVELOPMENT": "/O2 /Ob2",
+				"CMAKE_EXE_LINKER_FLAGS_DEVELOPMENT": "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF",
+				"CMAKE_SHARED_LINKER_FLAGS_DEVELOPMENT": "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF",
+				"CMAKE_MODULE_LINKER_FLAGS_DEVELOPMENT": "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF",
+				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": "Release"
+			}
+		},
+		{
+			"name": "windows-x64-msvc-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for Windows x64 MSVC",
+			"inherits": [
+				"windows-default"
+			],
 			"architecture": {
 				"value": "x64",
 				"strategy": "external"
 			},
 			"cacheVariables": {
-				"CMAKE_C_FLAGS_INIT": "/W4",
-				"CMAKE_CXX_FLAGS_INIT": "/W4",
-				"CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/tool/cmake/platform/common/SetMSVCRuntime.cmake"
-			}
-		},
-		{
-			"name": "windows-ninja-msvc",
-			"displayName": "Ninja MSVC",
-			"description": "Ninja Multi-Config generator with Microsoft Visual C++ (MSVC)",
-			"generator": "Ninja Multi-Config",
-			"inherits": [
-				"windows-default"
-			],
-			"cacheVariables": {
+				"SYNODIC_BUILD_IDENTITY": "windows-x64-msvc",
 				"CMAKE_C_COMPILER": "cl",
-				"CMAKE_CXX_COMPILER": "cl"
+				"CMAKE_CXX_COMPILER": "cl",
+				"CMAKE_C_FLAGS_INIT": "/W4",
+				"CMAKE_CXX_FLAGS_INIT": "/W4"
 			},
 			"vendor": {
 				"microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -45,232 +59,135 @@
 			}
 		},
 		{
-			"name": "windows-ninja-clang",
-			"displayName": "Ninja Clang",
-			"description": "Ninja Multi-Config generator with Clang (clang-cl)",
+			"name": "windows-x64-msvc",
+			"displayName": "Windows x64 MSVC",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
 			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/windows-x64-msvc/multi",
+			"inherits": [
+				"windows-x64-msvc-toolchain",
+				"windows-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Development;Release"
+			}
+		},
+		{
+			"name": "windows-x64-msvc-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-x64-msvc/debug",
+			"inherits": [
+				"windows-x64-msvc-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "windows-x64-msvc-development",
+			"displayName": "Windows x64 MSVC Development",
+			"description": "Ninja single-config Development build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-x64-msvc/development",
+			"inherits": [
+				"windows-x64-msvc-toolchain",
+				"windows-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Development"
+			}
+		},
+		{
+			"name": "windows-x64-msvc-release",
+			"displayName": "Windows x64 MSVC Release",
+			"description": "Ninja single-config Release build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-x64-msvc/release",
+			"inherits": [
+				"windows-x64-msvc-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "windows-arm64-msvc-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for Windows arm64 MSVC",
 			"inherits": [
 				"windows-default"
 			],
+			"architecture": {
+				"value": "arm64",
+				"strategy": "external"
+			},
 			"cacheVariables": {
-				"CMAKE_C_COMPILER": "clang-cl",
-				"CMAKE_CXX_COMPILER": "clang-cl"
+				"SYNODIC_BUILD_IDENTITY": "windows-arm64-msvc",
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl",
+				"CMAKE_C_FLAGS_INIT": "/W4",
+				"CMAKE_CXX_FLAGS_INIT": "/W4"
 			},
 			"vendor": {
 				"microsoft.com/VisualStudioSettings/CMake/1.0": {
-					"intelliSenseMode": "windows-clang-x64"
+					"intelliSenseMode": "windows-msvc-arm64"
 				}
 			}
 		},
 		{
-			"name": "windows-msbuild-msvc",
-			"displayName": "MSBuild MSVC",
-			"description": "Visual Studio 18 2026 generator with Microsoft Visual C++ (MSVC)",
-			"generator": "Visual Studio 18 2026",
-			"architecture": {
-				"value": "x64",
-				"strategy": "set"
-			},
+			"name": "windows-arm64-msvc",
+			"displayName": "Windows arm64 MSVC",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/windows-arm64-msvc/multi",
 			"inherits": [
-				"windows-default"
-			]
-		},
-		{
-			"name": "windows-msbuild-clang",
-			"displayName": "MSBuild Clang",
-			"description": "Visual Studio 18 2026 generator with Clang (clang-cl)",
-			"generator": "Visual Studio 18 2026",
-			"architecture": {
-				"value": "x64",
-				"strategy": "set"
-			},
-			"inherits": [
-				"windows-default"
+				"windows-arm64-msvc-toolchain",
+				"windows-default-development"
 			],
-			"toolset": "ClangCL"
-		},
-		{
-			"name": "windows-ninja-msvc-release",
-			"inherits": [
-				"cppython-release",
-				"windows-ninja-msvc"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
-				}
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Development;Release"
 			}
 		},
 		{
-			"name": "windows-ninja-msvc-development",
+			"name": "windows-arm64-msvc-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-arm64-msvc/debug",
 			"inherits": [
-				"cppython-release",
-				"windows-ninja-msvc"
+				"windows-arm64-msvc-toolchain"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Release"
-				}
+				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		},
 		{
-			"name": "windows-ninja-msvc-debug",
+			"name": "windows-arm64-msvc-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"description": "Ninja single-config Development build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-arm64-msvc/development",
 			"inherits": [
-				"cppython-debug",
-				"windows-ninja-msvc"
+				"windows-arm64-msvc-toolchain",
+				"windows-default-development"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
-				}
+				"CMAKE_BUILD_TYPE": "Development"
 			}
 		},
 		{
-			"name": "windows-ninja-clang-release",
+			"name": "windows-arm64-msvc-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"description": "Ninja single-config Release build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/windows-arm64-msvc/release",
 			"inherits": [
-				"cppython-release",
-				"windows-ninja-clang"
+				"windows-arm64-msvc-toolchain"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-ninja-clang-development",
-			"inherits": [
-				"cppython-release",
-				"windows-ninja-clang"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-ninja-clang-debug",
-			"inherits": [
-				"cppython-debug",
-				"windows-ninja-clang"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-msvc-release",
-			"inherits": [
-				"cppython-release",
-				"windows-msbuild-msvc"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-msvc-development",
-			"inherits": [
-				"cppython-release",
-				"windows-msbuild-msvc"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-msvc-debug",
-			"inherits": [
-				"cppython-debug",
-				"windows-msbuild-msvc"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-clang-release",
-			"inherits": [
-				"cppython-release",
-				"windows-msbuild-clang"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-clang-development",
-			"inherits": [
-				"cppython-release",
-				"windows-msbuild-clang"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Release"
-				}
-			}
-		},
-		{
-			"name": "windows-msbuild-clang-debug",
-			"inherits": [
-				"cppython-debug",
-				"windows-msbuild-clang"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
-				}
+				"CMAKE_BUILD_TYPE": "Release"
 			}
 		}
 	],
@@ -278,116 +195,113 @@
 		{
 			"name": "windows-default",
 			"hidden": true,
-			"condition": {
+			"inherits": [
+				"default"
+			],
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
 			}
 		},
 		{
-			"name": "windows-ninja-msvc-release",
-			"displayName": "Ninja MSVC Release",
-			"configurePreset": "windows-ninja-msvc-release",
-			"configuration": "Release",
-			"inherits": [
-				"windows-default"
-			]
-		},
-		{
-			"name": "windows-ninja-msvc-development",
-			"displayName": "Ninja MSVC Development",
-			"configurePreset": "windows-ninja-msvc-development",
-			"configuration": "Development",
-			"inherits": [
-				"windows-default"
-			]
-		},
-		{
-			"name": "windows-ninja-msvc-debug",
-			"displayName": "Ninja MSVC Debug",
-			"configurePreset": "windows-ninja-msvc-debug",
+			"name": "windows-x64-msvc-multi-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"configurePreset": "windows-x64-msvc",
 			"configuration": "Debug",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-ninja-clang-release",
-			"displayName": "Ninja Clang Release",
-			"configurePreset": "windows-ninja-clang-release",
-			"configuration": "Release",
+			"name": "windows-x64-msvc-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"configurePreset": "windows-x64-msvc-debug",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-ninja-clang-development",
-			"displayName": "Ninja Clang Development",
-			"configurePreset": "windows-ninja-clang-development",
+			"name": "windows-x64-msvc-multi-development",
+			"displayName": "Windows x64 MSVC Development",
+			"configurePreset": "windows-x64-msvc",
 			"configuration": "Development",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-ninja-clang-debug",
-			"displayName": "Ninja Clang Debug",
-			"configurePreset": "windows-ninja-clang-debug",
-			"configuration": "Debug",
+			"name": "windows-x64-msvc-development",
+			"displayName": "Windows x64 MSVC Development",
+			"configurePreset": "windows-x64-msvc-development",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-msbuild-msvc-release",
-			"displayName": "MSBuild MSVC Release",
-			"configurePreset": "windows-msbuild-msvc-release",
+			"name": "windows-x64-msvc-multi-release",
+			"displayName": "Windows x64 MSVC Release",
+			"configurePreset": "windows-x64-msvc",
 			"configuration": "Release",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-msbuild-msvc-development",
-			"displayName": "MSBuild MSVC Development",
-			"configurePreset": "windows-msbuild-msvc-development",
-			"configuration": "Development",
+			"name": "windows-x64-msvc-release",
+			"displayName": "Windows x64 MSVC Release",
+			"configurePreset": "windows-x64-msvc-release",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-msbuild-msvc-debug",
-			"displayName": "MSBuild MSVC Debug",
-			"configurePreset": "windows-msbuild-msvc-debug",
+			"name": "windows-arm64-msvc-multi-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"configurePreset": "windows-arm64-msvc",
 			"configuration": "Debug",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-msbuild-clang-release",
-			"displayName": "MSBuild Clang Release",
-			"configurePreset": "windows-msbuild-clang-release",
+			"name": "windows-arm64-msvc-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"configurePreset": "windows-arm64-msvc-debug",
+			"inherits": [
+				"windows-default"
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-multi-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"configurePreset": "windows-arm64-msvc",
+			"configuration": "Development",
+			"inherits": [
+				"windows-default"
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"configurePreset": "windows-arm64-msvc-development",
+			"inherits": [
+				"windows-default"
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-multi-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"configurePreset": "windows-arm64-msvc",
 			"configuration": "Release",
 			"inherits": [
 				"windows-default"
 			]
 		},
 		{
-			"name": "windows-msbuild-clang-development",
-			"displayName": "MSBuild Clang Development",
-			"configurePreset": "windows-msbuild-clang-development",
-			"configuration": "Development",
-			"inherits": [
-				"windows-default"
-			]
-		},
-		{
-			"name": "windows-msbuild-clang-debug",
-			"displayName": "MSBuild Clang Debug",
-			"configurePreset": "windows-msbuild-clang-debug",
-			"configuration": "Debug",
+			"name": "windows-arm64-msvc-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"configurePreset": "windows-arm64-msvc-release",
 			"inherits": [
 				"windows-default"
 			]
@@ -397,122 +311,302 @@
 		{
 			"name": "windows-default",
 			"hidden": true,
-			"condition": {
+			"inherits": [
+				"default"
+			],
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
-			},
+			}
+		},
+		{
+			"name": "windows-x64-msvc-multi-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"configurePreset": "windows-x64-msvc",
+			"configuration": "Debug",
 			"inherits": [
-				"default"
+				"windows-default"
 			]
 		},
 		{
-			"name": "windows-ninja-msvc-debug",
-			"displayName": "Ninja MSVC Debug",
-			"configurePreset": "windows-ninja-msvc-debug",
+			"name": "windows-x64-msvc-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"configurePreset": "windows-x64-msvc-debug",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "windows-ninja-msvc-development",
-			"displayName": "Ninja MSVC Development",
-			"configurePreset": "windows-ninja-msvc-development",
+			"name": "windows-x64-msvc-multi-development",
+			"displayName": "Windows x64 MSVC Development",
+			"configurePreset": "windows-x64-msvc",
+			"configuration": "Development",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Development"
+			]
 		},
 		{
-			"name": "windows-ninja-msvc-release",
-			"displayName": "Ninja MSVC Release",
-			"configurePreset": "windows-ninja-msvc-release",
+			"name": "windows-x64-msvc-development",
+			"displayName": "Windows x64 MSVC Development",
+			"configurePreset": "windows-x64-msvc-development",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Release"
+			]
 		},
 		{
-			"name": "windows-ninja-clang-debug",
-			"displayName": "Ninja Clang Debug",
-			"configurePreset": "windows-ninja-clang-debug",
+			"name": "windows-x64-msvc-multi-release",
+			"displayName": "Windows x64 MSVC Release",
+			"configurePreset": "windows-x64-msvc",
+			"configuration": "Release",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "windows-ninja-clang-development",
-			"displayName": "Ninja Clang Development",
-			"configurePreset": "windows-ninja-clang-development",
+			"name": "windows-x64-msvc-release",
+			"displayName": "Windows x64 MSVC Release",
+			"configurePreset": "windows-x64-msvc-release",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Development"
+			]
 		},
 		{
-			"name": "windows-ninja-clang-release",
-			"displayName": "Ninja Clang Release",
-			"configurePreset": "windows-ninja-clang-release",
+			"name": "windows-arm64-msvc-multi-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"configurePreset": "windows-arm64-msvc",
+			"configuration": "Debug",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Release"
+			]
 		},
 		{
-			"name": "windows-msbuild-msvc-debug",
-			"displayName": "MSBuild MSVC Debug",
-			"configurePreset": "windows-msbuild-msvc-debug",
+			"name": "windows-arm64-msvc-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"configurePreset": "windows-arm64-msvc-debug",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "windows-msbuild-msvc-development",
-			"displayName": "MSBuild MSVC Development",
-			"configurePreset": "windows-msbuild-msvc-development",
+			"name": "windows-arm64-msvc-multi-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"configurePreset": "windows-arm64-msvc",
+			"configuration": "Development",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Development"
+			]
 		},
 		{
-			"name": "windows-msbuild-msvc-release",
-			"displayName": "MSBuild MSVC Release",
-			"configurePreset": "windows-msbuild-msvc-release",
+			"name": "windows-arm64-msvc-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"configurePreset": "windows-arm64-msvc-development",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Release"
+			]
 		},
 		{
-			"name": "windows-msbuild-clang-debug",
-			"displayName": "MSBuild Clang Debug",
-			"configurePreset": "windows-msbuild-clang-debug",
+			"name": "windows-arm64-msvc-multi-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"configurePreset": "windows-arm64-msvc",
+			"configuration": "Release",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "windows-msbuild-clang-development",
-			"displayName": "MSBuild Clang Development",
-			"configurePreset": "windows-msbuild-clang-development",
+			"name": "windows-arm64-msvc-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"configurePreset": "windows-arm64-msvc-release",
 			"inherits": [
 				"windows-default"
-			],
-			"configuration": "Development"
+			]
+		}
+	],
+	"workflowPresets": [
+		{
+			"name": "windows-x64-msvc",
+			"displayName": "Windows x64 MSVC All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-x64-msvc"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-multi-debug"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-multi-development"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-multi-development"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-multi-release"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-multi-release"
+				}
+			]
 		},
 		{
-			"name": "windows-msbuild-clang-release",
-			"displayName": "MSBuild Clang Release",
-			"configurePreset": "windows-msbuild-clang-release",
-			"inherits": [
-				"windows-default"
-			],
-			"configuration": "Release"
+			"name": "windows-x64-msvc-debug",
+			"displayName": "Windows x64 MSVC Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-x64-msvc-debug"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-debug"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-debug"
+				}
+			]
+		},
+		{
+			"name": "windows-x64-msvc-development",
+			"displayName": "Windows x64 MSVC Development",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-x64-msvc-development"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-development"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-development"
+				}
+			]
+		},
+		{
+			"name": "windows-x64-msvc-release",
+			"displayName": "Windows x64 MSVC Release",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-x64-msvc-release"
+				},
+				{
+					"type": "build",
+					"name": "windows-x64-msvc-release"
+				},
+				{
+					"type": "test",
+					"name": "windows-x64-msvc-release"
+				}
+			]
+		},
+		{
+			"name": "windows-arm64-msvc",
+			"displayName": "Windows arm64 MSVC All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-arm64-msvc"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-multi-debug"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-multi-development"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-multi-development"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-multi-release"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-multi-release"
+				}
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-debug",
+			"displayName": "Windows arm64 MSVC Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-arm64-msvc-debug"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-debug"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-debug"
+				}
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-development",
+			"displayName": "Windows arm64 MSVC Development",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-arm64-msvc-development"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-development"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-development"
+				}
+			]
+		},
+		{
+			"name": "windows-arm64-msvc-release",
+			"displayName": "Windows arm64 MSVC Release",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "windows-arm64-msvc-release"
+				},
+				{
+					"type": "build",
+					"name": "windows-arm64-msvc-release"
+				},
+				{
+					"type": "test",
+					"name": "windows-arm64-msvc-release"
+				}
+			]
 		}
 	]
 }

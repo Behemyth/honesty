@@ -1,0 +1,20 @@
+# First-party Conan packages that no remote serves yet.
+# CI exports each pinned recipe into its Conan cache before preparing dependencies.
+# List every first-party package in the dependency graph, including transitive ones.
+# Delete this file when a remote serves these packages.
+version = 1
+
+[[packages]]
+name = "portability"
+repository = "Behemyth/portability"
+commit = "bc4827c1fb50c7b537aa6648bca1dbf1a5d6b5a5"
+
+[[packages]]
+name = "cppaste"
+repository = "Behemyth/cppaste"
+commit = "9d467b651306db98fdd8209d448e369404e9a38f"
+
+[[packages]]
+name = "periapsis"
+repository = "Behemyth/periapsis"
+commit = "fcc7e81c1aa641a06e9770459d1b0b5ea7ce49b9"

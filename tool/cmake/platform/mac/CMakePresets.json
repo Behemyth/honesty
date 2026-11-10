@@ -1,79 +1,110 @@
 {
-	"version": 9,
+	"version": 10,
 	"include": [
 		"../common/CMakePresets.json"
 	],
 	"configurePresets": [
 		{
 			"name": "macos-default",
+			"hidden": true,
+			"description": "Base preset for macOS identities",
 			"inherits": [
 				"default"
 			],
-			"hidden": true,
-			"description": "Base preset for macOS configurations",
-			"condition": {
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Darwin"
 			},
 			"cacheVariables": {
-				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic",
-				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic"
+				"CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/tool/cmake/dependencies.cmake"
 			}
 		},
 		{
-			"name": "macos-ninja-clang",
-			"displayName": "Ninja Clang",
-			"description": "Ninja Multi-Config generator with Apple Clang",
-			"generator": "Ninja Multi-Config",
+			"name": "macos-default-development",
+			"hidden": true,
+			"description": "Development configuration: optimized with debug info and assertions, Release ABI and dependencies",
+			"cacheVariables": {
+				"CMAKE_C_FLAGS_DEVELOPMENT": "-O2 -g",
+				"CMAKE_CXX_FLAGS_DEVELOPMENT": "-O2 -g -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_EXTENSIVE",
+				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": "Release"
+			}
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for macOS arm64 Clang libc++",
 			"inherits": [
 				"macos-default"
-			]
-		},
-		{
-			"name": "macos-ninja-clang-release",
-			"inherits": [
-				"cppython-release",
-				"macos-ninja-clang"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
+				"SYNODIC_BUILD_IDENTITY": "macos-arm64-clang-libcxx",
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++",
+				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic",
+				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic -stdlib=libc++",
+				"CMAKE_EXE_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_SHARED_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_MODULE_LINKER_FLAGS_INIT": "-stdlib=libc++"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"intelliSenseMode": "macos-clang-arm64"
 				}
 			}
 		},
 		{
-			"name": "macos-ninja-clang-development",
+			"name": "macos-arm64-clang-libcxx",
+			"displayName": "macOS arm64 Clang libc++",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/macos-arm64-clang-libcxx/multi",
 			"inherits": [
-				"cppython-debug",
-				"macos-ninja-clang"
+				"macos-arm64-clang-libcxx-toolchain",
+				"macos-default-development"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Debug"
-				}
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Development;Release"
 			}
 		},
 		{
-			"name": "macos-ninja-clang-debug",
+			"name": "macos-arm64-clang-libcxx-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/macos-arm64-clang-libcxx/debug",
 			"inherits": [
-				"cppython-debug",
-				"macos-ninja-clang"
+				"macos-arm64-clang-libcxx-toolchain"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
-				}
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"description": "Ninja single-config Development build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/macos-arm64-clang-libcxx/development",
+			"inherits": [
+				"macos-arm64-clang-libcxx-toolchain",
+				"macos-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Development"
+			}
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"description": "Ninja single-config Release build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/macos-arm64-clang-libcxx/release",
+			"inherits": [
+				"macos-arm64-clang-libcxx-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
 			}
 		}
 	],
@@ -81,35 +112,62 @@
 		{
 			"name": "macos-default",
 			"hidden": true,
-			"condition": {
+			"inherits": [
+				"default"
+			],
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Darwin"
 			}
 		},
 		{
-			"name": "macos-ninja-clang-release",
-			"displayName": "Ninja Clang Release",
-			"configurePreset": "macos-ninja-clang-release",
-			"configuration": "Release",
+			"name": "macos-arm64-clang-libcxx-multi-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"configurePreset": "macos-arm64-clang-libcxx",
+			"configuration": "Debug",
 			"inherits": [
 				"macos-default"
 			]
 		},
 		{
-			"name": "macos-ninja-clang-development",
-			"displayName": "Ninja Clang Development",
-			"configurePreset": "macos-ninja-clang-development",
+			"name": "macos-arm64-clang-libcxx-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"configurePreset": "macos-arm64-clang-libcxx-debug",
+			"inherits": [
+				"macos-default"
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-multi-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"configurePreset": "macos-arm64-clang-libcxx",
 			"configuration": "Development",
 			"inherits": [
 				"macos-default"
 			]
 		},
 		{
-			"name": "macos-ninja-clang-debug",
-			"displayName": "Ninja Clang Debug",
-			"configurePreset": "macos-ninja-clang-debug",
-			"configuration": "Debug",
+			"name": "macos-arm64-clang-libcxx-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"configurePreset": "macos-arm64-clang-libcxx-development",
+			"inherits": [
+				"macos-default"
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-multi-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"configurePreset": "macos-arm64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"macos-default"
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"configurePreset": "macos-arm64-clang-libcxx-release",
 			"inherits": [
 				"macos-default"
 			]
@@ -119,40 +177,159 @@
 		{
 			"name": "macos-default",
 			"hidden": true,
-			"output": {
-				"outputOnFailure": true,
-				"shortProgress": true
-			},
 			"inherits": [
 				"default"
+			],
+"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-multi-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"configurePreset": "macos-arm64-clang-libcxx",
+			"configuration": "Debug",
+			"inherits": [
+				"macos-default"
 			]
 		},
 		{
-			"name": "macos-ninja-clang-debug",
-			"displayName": "Ninja Clang Debug",
-			"configurePreset": "macos-ninja-clang-debug",
+			"name": "macos-arm64-clang-libcxx-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"configurePreset": "macos-arm64-clang-libcxx-debug",
 			"inherits": [
 				"macos-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "macos-ninja-clang-development",
-			"displayName": "Ninja Clang Development",
-			"configurePreset": "macos-ninja-clang-development",
+			"name": "macos-arm64-clang-libcxx-multi-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"configurePreset": "macos-arm64-clang-libcxx",
+			"configuration": "Development",
 			"inherits": [
 				"macos-default"
-			],
-			"configuration": "Development"
+			]
 		},
 		{
-			"name": "macos-ninja-clang-release",
-			"displayName": "Ninja Clang Release",
-			"configurePreset": "macos-ninja-clang-release",
+			"name": "macos-arm64-clang-libcxx-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"configurePreset": "macos-arm64-clang-libcxx-development",
 			"inherits": [
 				"macos-default"
-			],
-			"configuration": "Release"
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-multi-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"configurePreset": "macos-arm64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"macos-default"
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"configurePreset": "macos-arm64-clang-libcxx-release",
+			"inherits": [
+				"macos-default"
+			]
+		}
+	],
+	"workflowPresets": [
+		{
+			"name": "macos-arm64-clang-libcxx",
+			"displayName": "macOS arm64 Clang libc++ All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "macos-arm64-clang-libcxx"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-multi-release"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-multi-release"
+				}
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-debug",
+			"displayName": "macOS arm64 Clang libc++ Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "macos-arm64-clang-libcxx-debug"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-debug"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-debug"
+				}
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-development",
+			"displayName": "macOS arm64 Clang libc++ Development",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "macos-arm64-clang-libcxx-development"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-development"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-development"
+				}
+			]
+		},
+		{
+			"name": "macos-arm64-clang-libcxx-release",
+			"displayName": "macOS arm64 Clang libc++ Release",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "macos-arm64-clang-libcxx-release"
+				},
+				{
+					"type": "build",
+					"name": "macos-arm64-clang-libcxx-release"
+				},
+				{
+					"type": "test",
+					"name": "macos-arm64-clang-libcxx-release"
+				}
+			]
 		}
 	]
 }

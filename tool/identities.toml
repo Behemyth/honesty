@@ -1,0 +1,62 @@
+
+version = 1
+
+[[identities]]
+name = "windows-x64-msvc"
+os = "windows"
+arch = "x64"
+compiler = "msvc"
+standard-library = "msvc"
+variant = ""
+configurations = ["Debug", "Development", "Release"]
+dependency-build-types = { Debug = "Debug", Development = "Release", Release = "Release" }
+
+[[identities]]
+name = "windows-arm64-msvc"
+os = "windows"
+arch = "arm64"
+compiler = "msvc"
+standard-library = "msvc"
+variant = ""
+configurations = ["Debug", "Development", "Release"]
+dependency-build-types = { Debug = "Debug", Development = "Release", Release = "Release" }
+
+[[identities]]
+name = "linux-x64-clang-libcxx"
+os = "linux"
+arch = "x64"
+compiler = "clang"
+standard-library = "libc++"
+variant = ""
+configurations = ["Debug", "Development", "Release"]
+dependency-build-types = { Debug = "Debug", Development = "Release", Release = "Release" }
+
+[[identities]]
+name = "linux-arm64-clang-libcxx"
+os = "linux"
+arch = "arm64"
+compiler = "clang"
+standard-library = "libc++"
+variant = ""
+configurations = ["Debug", "Development", "Release"]
+dependency-build-types = { Debug = "Debug", Development = "Release", Release = "Release" }
+
+[[identities]]
+name = "linux-x64-clang-libcxx-sanitize"
+os = "linux"
+arch = "x64"
+compiler = "clang"
+standard-library = "libc++"
+variant = "sanitize"
+configurations = ["Debug"]
+dependency-build-types = { Debug = "Debug" }
+
+[[identities]]
+name = "macos-arm64-clang-libcxx"
+os = "macos"
+arch = "arm64"
+compiler = "clang"
+standard-library = "libc++"
+variant = ""
+configurations = ["Debug", "Development", "Release"]
+dependency-build-types = { Debug = "Debug", Development = "Release", Release = "Release" }

@@ -1,0 +1,47 @@
+# Rendered by the Synodic configuration overlay; change the template, not this file.
+name: Check Native Status
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  workflow_dispatch:
+    inputs:
+      identity:
+        description: Native identity to test
+        type: choice
+        required: true
+        options:
+          - windows-x64-msvc
+          - windows-arm64-msvc
+          - linux-x64-clang-libcxx
+          - linux-arm64-clang-libcxx
+          - linux-x64-clang-libcxx-sanitize
+          - macos-arm64-clang-libcxx
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-check-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}${{ inputs.identity && format('-{0}', inputs.identity) || '' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    if: github.event_name != 'workflow_dispatch'
+    uses: Behemyth/.github/.github/workflows/native-check.yml@38e759179b7eb40e507b5f62576072a21a670d03
+    with:
+      fast-install: pdm install -G native
+      fast-uses-cmake: true
+      fast-command: pdm lock --check && "$CMAKE_BINARY" --list-presets=all
+      native-install: pdm install -G native
+
+  development-check:
+    if: github.event_name == 'workflow_dispatch'
+    uses: Behemyth/.github/.github/workflows/native-check.yml@38e759179b7eb40e507b5f62576072a21a670d03
+    with:
+      fast-install: pdm install -G native
+      fast-uses-cmake: true
+      fast-command: pdm lock --check && "$CMAKE_BINARY" --list-presets=all
+      native-install: pdm install -G native
+      targeted: true
+      target-identity: ${{ inputs.identity }}

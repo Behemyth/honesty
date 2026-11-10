@@ -1,83 +1,237 @@
 {
-	"version": 9,
+	"version": 10,
 	"include": [
 		"../common/CMakePresets.json"
 	],
 	"configurePresets": [
 		{
 			"name": "linux-default",
+			"hidden": true,
+			"description": "Base preset for Linux identities",
 			"inherits": [
 				"default"
 			],
-			"hidden": true,
-			"description": "Base preset for Linux configurations",
-			"condition": {
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Linux"
 			},
 			"cacheVariables": {
-				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic",
-				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic"
+				"CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/tool/cmake/dependencies.cmake"
 			}
 		},
 		{
-			"name": "linux-ninja-gcc",
-			"displayName": "Ninja GCC",
-			"description": "Ninja Multi-Config generator with GCC",
-			"generator": "Ninja Multi-Config",
+			"name": "linux-default-development",
+			"hidden": true,
+			"description": "Development configuration: optimized with debug info and assertions, Release ABI and dependencies",
+			"cacheVariables": {
+				"CMAKE_C_FLAGS_DEVELOPMENT": "-O2 -g",
+				"CMAKE_CXX_FLAGS_DEVELOPMENT": "-O2 -g -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_EXTENSIVE",
+				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": "Release"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for Linux x64 Clang libc++",
 			"inherits": [
 				"linux-default"
 			],
 			"cacheVariables": {
-				"CMAKE_C_COMPILER": "gcc",
-				"CMAKE_CXX_COMPILER": "g++"
-			}
-		},
-		{
-			"name": "linux-ninja-gcc-release",
-			"inherits": [
-				"cppython-release",
-				"linux-ninja-gcc"
-			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Release"
+				"SYNODIC_BUILD_IDENTITY": "linux-x64-clang-libcxx",
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++",
+				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic",
+				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic -stdlib=libc++",
+				"CMAKE_EXE_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_SHARED_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_MODULE_LINKER_FLAGS_INIT": "-stdlib=libc++"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"intelliSenseMode": "linux-clang-x64"
 				}
 			}
 		},
 		{
-			"name": "linux-ninja-gcc-development",
+			"name": "linux-x64-clang-libcxx",
+			"displayName": "Linux x64 Clang libc++",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx/multi",
 			"inherits": [
-				"cppython-debug",
-				"linux-ninja-gcc"
+				"linux-x64-clang-libcxx-toolchain",
+				"linux-default-development"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Development"
-				},
-				"CMAKE_MAP_IMPORTED_CONFIG_DEVELOPMENT": {
-					"type": "STRING",
-					"value": "Debug"
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Development;Release"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx/debug",
+			"inherits": [
+				"linux-x64-clang-libcxx-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"description": "Ninja single-config Development build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx/development",
+			"inherits": [
+				"linux-x64-clang-libcxx-toolchain",
+				"linux-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Development"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"description": "Ninja single-config Release build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx/release",
+			"inherits": [
+				"linux-x64-clang-libcxx-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for Linux arm64 Clang libc++",
+			"inherits": [
+				"linux-default"
+			],
+			"cacheVariables": {
+				"SYNODIC_BUILD_IDENTITY": "linux-arm64-clang-libcxx",
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++",
+				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic",
+				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic -stdlib=libc++",
+				"CMAKE_EXE_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_SHARED_LINKER_FLAGS_INIT": "-stdlib=libc++",
+				"CMAKE_MODULE_LINKER_FLAGS_INIT": "-stdlib=libc++"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"intelliSenseMode": "linux-clang-arm64"
 				}
 			}
 		},
 		{
-			"name": "linux-ninja-gcc-debug",
+			"name": "linux-arm64-clang-libcxx",
+			"displayName": "Linux arm64 Clang libc++",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/linux-arm64-clang-libcxx/multi",
 			"inherits": [
-				"cppython-debug",
-				"linux-ninja-gcc"
+				"linux-arm64-clang-libcxx-toolchain",
+				"linux-default-development"
 			],
-			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
-				"CMAKE_CONFIGURATION_TYPES": {
-					"type": "STRING",
-					"value": "Debug"
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Development;Release"
+			}
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-arm64-clang-libcxx/debug",
+			"inherits": [
+				"linux-arm64-clang-libcxx-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"description": "Ninja single-config Development build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-arm64-clang-libcxx/development",
+			"inherits": [
+				"linux-arm64-clang-libcxx-toolchain",
+				"linux-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Development"
+			}
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"description": "Ninja single-config Release build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-arm64-clang-libcxx/release",
+			"inherits": [
+				"linux-arm64-clang-libcxx-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-toolchain",
+			"hidden": true,
+			"description": "Compiler and flags for Linux x64 Clang libc++ ASan UBSan",
+			"inherits": [
+				"linux-default"
+			],
+			"cacheVariables": {
+				"SYNODIC_BUILD_IDENTITY": "linux-x64-clang-libcxx-sanitize",
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++",
+				"CMAKE_C_FLAGS_INIT": "-Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer",
+				"CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -Wpedantic -stdlib=libc++ -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer",
+				"CMAKE_EXE_LINKER_FLAGS_INIT": "-stdlib=libc++ -fsanitize=address,undefined",
+				"CMAKE_SHARED_LINKER_FLAGS_INIT": "-stdlib=libc++ -fsanitize=address,undefined",
+				"CMAKE_MODULE_LINKER_FLAGS_INIT": "-stdlib=libc++ -fsanitize=address,undefined"
+			},
+			"vendor": {
+				"microsoft.com/VisualStudioSettings/CMake/1.0": {
+					"intelliSenseMode": "linux-clang-x64"
 				}
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan",
+			"description": "Ninja Multi-Config: choose Debug, Development, or Release when building",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx-sanitize/multi",
+			"inherits": [
+				"linux-x64-clang-libcxx-sanitize-toolchain",
+				"linux-default-development"
+			],
+			"cacheVariables": {
+				"CMAKE_CONFIGURATION_TYPES": "Debug"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"description": "Ninja single-config Debug build",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-x64-clang-libcxx-sanitize/debug",
+			"inherits": [
+				"linux-x64-clang-libcxx-sanitize-toolchain"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		}
 	],
@@ -85,35 +239,130 @@
 		{
 			"name": "linux-default",
 			"hidden": true,
-			"condition": {
+			"inherits": [
+				"default"
+			],
+"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Linux"
 			}
 		},
 		{
-			"name": "linux-ninja-gcc-release",
-			"displayName": "Ninja GCC Release",
-			"configurePreset": "linux-ninja-gcc-release",
-			"configuration": "Release",
+			"name": "linux-x64-clang-libcxx-multi-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"configurePreset": "linux-x64-clang-libcxx",
+			"configuration": "Debug",
 			"inherits": [
 				"linux-default"
 			]
 		},
 		{
-			"name": "linux-ninja-gcc-development",
-			"displayName": "Ninja GCC Development",
-			"configurePreset": "linux-ninja-gcc-development",
+			"name": "linux-x64-clang-libcxx-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"configurePreset": "linux-x64-clang-libcxx-debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-multi-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"configurePreset": "linux-x64-clang-libcxx",
 			"configuration": "Development",
 			"inherits": [
 				"linux-default"
 			]
 		},
 		{
-			"name": "linux-ninja-gcc-debug",
-			"displayName": "Ninja GCC Debug",
-			"configurePreset": "linux-ninja-gcc-debug",
+			"name": "linux-x64-clang-libcxx-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"configurePreset": "linux-x64-clang-libcxx-development",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-multi-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"configurePreset": "linux-x64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"configurePreset": "linux-x64-clang-libcxx-release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"configurePreset": "linux-arm64-clang-libcxx",
 			"configuration": "Debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"configurePreset": "linux-arm64-clang-libcxx-debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"configurePreset": "linux-arm64-clang-libcxx",
+			"configuration": "Development",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"configurePreset": "linux-arm64-clang-libcxx-development",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"configurePreset": "linux-arm64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"configurePreset": "linux-arm64-clang-libcxx-release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-multi-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"configurePreset": "linux-x64-clang-libcxx-sanitize",
+			"configuration": "Debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"configurePreset": "linux-x64-clang-libcxx-sanitize-debug",
 			"inherits": [
 				"linux-default"
 			]
@@ -123,40 +372,357 @@
 		{
 			"name": "linux-default",
 			"hidden": true,
-			"output": {
-				"outputOnFailure": true,
-				"shortProgress": true
-			},
 			"inherits": [
 				"default"
+			],
+"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
+			"name": "linux-x64-clang-libcxx-multi-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"configurePreset": "linux-x64-clang-libcxx",
+			"configuration": "Debug",
+			"inherits": [
+				"linux-default"
 			]
 		},
 		{
-			"name": "linux-ninja-gcc-debug",
-			"displayName": "Ninja GCC Debug",
-			"configurePreset": "linux-ninja-gcc-debug",
+			"name": "linux-x64-clang-libcxx-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"configurePreset": "linux-x64-clang-libcxx-debug",
 			"inherits": [
 				"linux-default"
-			],
-			"configuration": "Debug"
+			]
 		},
 		{
-			"name": "linux-ninja-gcc-development",
-			"displayName": "Ninja GCC Development",
-			"configurePreset": "linux-ninja-gcc-development",
+			"name": "linux-x64-clang-libcxx-multi-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"configurePreset": "linux-x64-clang-libcxx",
+			"configuration": "Development",
 			"inherits": [
 				"linux-default"
-			],
-			"configuration": "Development"
+			]
 		},
 		{
-			"name": "linux-ninja-gcc-release",
-			"displayName": "Ninja GCC Release",
-			"configurePreset": "linux-ninja-gcc-release",
+			"name": "linux-x64-clang-libcxx-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"configurePreset": "linux-x64-clang-libcxx-development",
 			"inherits": [
 				"linux-default"
-			],
-			"configuration": "Release"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-multi-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"configurePreset": "linux-x64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"configurePreset": "linux-x64-clang-libcxx-release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"configurePreset": "linux-arm64-clang-libcxx",
+			"configuration": "Debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"configurePreset": "linux-arm64-clang-libcxx-debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"configurePreset": "linux-arm64-clang-libcxx",
+			"configuration": "Development",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"configurePreset": "linux-arm64-clang-libcxx-development",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-multi-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"configurePreset": "linux-arm64-clang-libcxx",
+			"configuration": "Release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"configurePreset": "linux-arm64-clang-libcxx-release",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-multi-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"configurePreset": "linux-x64-clang-libcxx-sanitize",
+			"configuration": "Debug",
+			"inherits": [
+				"linux-default"
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"configurePreset": "linux-x64-clang-libcxx-sanitize-debug",
+			"inherits": [
+				"linux-default"
+			]
+		}
+	],
+	"workflowPresets": [
+		{
+			"name": "linux-x64-clang-libcxx",
+			"displayName": "Linux x64 Clang libc++ All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-multi-release"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-multi-release"
+				}
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-debug",
+			"displayName": "Linux x64 Clang libc++ Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx-debug"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-debug"
+				}
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-development",
+			"displayName": "Linux x64 Clang libc++ Development",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx-development"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-development"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-development"
+				}
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-release",
+			"displayName": "Linux x64 Clang libc++ Release",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx-release"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-release"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-release"
+				}
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx",
+			"displayName": "Linux arm64 Clang libc++ All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-arm64-clang-libcxx"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-multi-debug"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-multi-development"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-multi-release"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-multi-release"
+				}
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-debug",
+			"displayName": "Linux arm64 Clang libc++ Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-arm64-clang-libcxx-debug"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-debug"
+				}
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-development",
+			"displayName": "Linux arm64 Clang libc++ Development",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-arm64-clang-libcxx-development"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-development"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-development"
+				}
+			]
+		},
+		{
+			"name": "linux-arm64-clang-libcxx-release",
+			"displayName": "Linux arm64 Clang libc++ Release",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-arm64-clang-libcxx-release"
+				},
+				{
+					"type": "build",
+					"name": "linux-arm64-clang-libcxx-release"
+				},
+				{
+					"type": "test",
+					"name": "linux-arm64-clang-libcxx-release"
+				}
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan All Configurations",
+			"description": "Configure once, then build and test each supported configuration",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx-sanitize"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-sanitize-multi-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-sanitize-multi-debug"
+				}
+			]
+		},
+		{
+			"name": "linux-x64-clang-libcxx-sanitize-debug",
+			"displayName": "Linux x64 Clang libc++ ASan UBSan Debug",
+			"description": "Configure, build, and test one single-config build",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "linux-x64-clang-libcxx-sanitize-debug"
+				},
+				{
+					"type": "build",
+					"name": "linux-x64-clang-libcxx-sanitize-debug"
+				},
+				{
+					"type": "test",
+					"name": "linux-x64-clang-libcxx-sanitize-debug"
+				}
+			]
 		}
 	]
 }

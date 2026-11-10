@@ -22,7 +22,10 @@ lint = ["ruff>=0.15.22", "pyrefly>=1.2.0.dev2", "isort>=9.0.0b1"]
 test = ["pytest>=9.1.1", "pytest-cov>=7.1.0", "pytest-mock>=3.15.1"]
 docs = ["zensical>=0.0.51"]
 config = ["copier>=9.17.0"]
-native = ["cppython[cmake,conan,git]", "ninja>=1.13.0"]
+native = [
+    "cppython[cmake,conan,git] @ git+https://github.com/Behemyth/cppython.git@327d67e39293da93d27e458deb758a72ffa2a42a",
+    "ninja>=1.13.0",
+]
 
 [tool.cppython]
 dependencies = [
@@ -35,8 +38,6 @@ dependencies = [
 test = []
 
 [tool.cppython.generators.cmake]
-preset_file = "tool/cmake/platform/common/CMakePresets.json"
-configuration_name = "default"
 minimum-version = "4.5.0rc1"
 
 [tool.cppython.providers.conan]
@@ -81,6 +82,7 @@ quote-style = "single"
 skip_empty = true
 
 [tool.pdm.scripts]
+prepare = "cppython install [test]"
 build = "cppython build"
 test = "cppython test"
 serve = "zensical serve"

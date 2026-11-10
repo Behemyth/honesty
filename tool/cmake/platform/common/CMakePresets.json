@@ -1,53 +1,17 @@
 {
-    "version": 9,
-    "include": [
-        "../../../cppython/cppython.json"
-    ],
+    "version": 10,
     "configurePresets": [
         {
             "name": "default",
-            "description": "Base preset for configurations",
+            "description": "Base preset for all identities",
             "hidden": true,
-            "inherits": "cppython",
-            "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "CMAKE_CONFIGURATION_TYPES": {
-                    "type": "STRING",
-                    "value": "Debug;Development;Release"
-                },
                 "CMAKE_COMPILE_WARNING_AS_ERROR": {
                     "type": "BOOL",
                     "value": "$env{SYNODIC_STRICT_WARNINGS}"
-                }
-            }
-        },
-        {
-            "name": "default-release",
-            "description": "All single-configuration generators should inherit from this preset",
-            "hidden": true,
-            "inherits": [
-                "cppython",
-                "cppython-release",
-                "default"
-            ],
-            "binaryDir": "${sourceDir}/../../../../build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "default-debug",
-            "description": "All single-configuration generators should inherit from this preset",
-            "hidden": true,
-            "inherits": [
-                "cppython",
-                "cppython-debug",
-                "default"
-            ],
-            "binaryDir": "${sourceDir}/../../../../build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                },
+                "CMAKE_CXX_STDLIB_MODULES_JSON": "$env{SYNODIC_CXX_STDLIB_MODULES_JSON}"
             }
         }
     ],
@@ -55,18 +19,6 @@
         {
             "name": "default",
             "hidden": true
-        },
-        {
-            "name": "default-release",
-            "description": "An example build preset for release",
-            "hidden": true,
-            "configurePreset": "default-release"
-        },
-        {
-            "name": "default-debug",
-            "description": "An example build preset for debug",
-            "hidden": true,
-            "configurePreset": "default-debug"
         }
     ],
     "testPresets": [
@@ -82,40 +34,6 @@
             "execution": {
                 "noTestsAction": "error",
                 "stopOnFailure": true
-            }
-        },
-        {
-            "name": "default-release",
-            "description": "Run tests for release configuration",
-            "inherits": "default",
-            "configurePreset": "default-release"
-        },
-        {
-            "name": "default-debug",
-            "description": "Run tests for debug configuration",
-            "inherits": "default",
-            "configurePreset": "default-debug"
-        },
-        {
-            "name": "default-bench-release",
-            "description": "Run benchmark tests for release configuration",
-            "inherits": "default",
-            "configurePreset": "default-release",
-            "filter": {
-                "include": {
-                    "label": "benchmark"
-                }
-            }
-        },
-        {
-            "name": "default-bench-debug",
-            "description": "Run benchmark tests for debug configuration",
-            "inherits": "default",
-            "configurePreset": "default-debug",
-            "filter": {
-                "include": {
-                    "label": "benchmark"
-                }
             }
         }
     ]
