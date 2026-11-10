@@ -28,7 +28,7 @@ concurrency:
 jobs:
   check:
     if: github.event_name != 'workflow_dispatch'
-    uses: Behemyth/.github/.github/workflows/native-check.yml@38e759179b7eb40e507b5f62576072a21a670d03
+    uses: Behemyth/.github/.github/workflows/native-check.yml@41a21464b96ad5b8fa0f409c9e80e69eca38aba0
     with:
       fast-install: pdm install -G native
       fast-uses-cmake: true
@@ -37,7 +37,7 @@ jobs:
 
   development-check:
     if: github.event_name == 'workflow_dispatch'
-    uses: Behemyth/.github/.github/workflows/native-check.yml@38e759179b7eb40e507b5f62576072a21a670d03
+    uses: Behemyth/.github/.github/workflows/native-check.yml@41a21464b96ad5b8fa0f409c9e80e69eca38aba0
     with:
       fast-install: pdm install -G native
       fast-uses-cmake: true
