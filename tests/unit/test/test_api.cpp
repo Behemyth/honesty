@@ -13,7 +13,7 @@ namespace
 {
 	Suite SUITE(
 		"api",
-		[](const Fixture& fixture) -> Generator
+		[](const Fixture&) -> Generator
 		{
 			const honesty::log::Logger& root  = honesty::log::RootLogger();
 			const honesty::log::Logger logger = root.CreateLogger("test");

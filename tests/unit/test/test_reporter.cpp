@@ -11,7 +11,7 @@ namespace
 {
 	Suite SUITE(
 		"reporter",
-		[](Fixture& fixture) -> Generator
+		[](Fixture&) -> Generator
 		{
 			co_yield "empty_description"_test = [&](const Requirements& requirements)
 			{
