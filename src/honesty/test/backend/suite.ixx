@@ -78,12 +78,12 @@ namespace honesty::test
 	 * registration is constrained. We don't want a suite wrapper to be a generic fixture that can contain expensive
 	 * calculations. All tests are known up-front and parameterized tests are expanded at run-time
 	 */
-	export template<size_t LiteralSize>
+	export template<std::size_t LiteralSize>
 	class Suite final
 	{
 		static_assert(LiteralSize > 0, "LiteralSize must be greater than 0");
 
-		static constexpr size_t NAME_SIZE = LiteralSize - 1;
+		static constexpr std::size_t NAME_SIZE = LiteralSize - 1;
 
 		using VariantType = std::variant<SuiteFunction, SuiteFixtureFunction>;
 
@@ -140,7 +140,7 @@ namespace honesty::test
 
 	public:
 
-		template<size_t LiteralSize>
+		template<std::size_t LiteralSize>
 		explicit(false) constexpr SuiteData(
 			const Suite<LiteralSize>& suite) :
 			nameView_(suite.name_),

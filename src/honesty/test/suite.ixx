@@ -7,7 +7,7 @@ import std;
 
 namespace honesty::test
 {
-	export template<size_t... NameSizes>
+	export template<std::size_t... NameSizes>
 	class SuiteRegistrar
 	{
 	public:

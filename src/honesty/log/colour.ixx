@@ -124,7 +124,7 @@ namespace honesty::log
 		STRIKE	  = 1 << 7,
 	};
 
-	constexpr size_t ATTRIBUTE_COUNT = std::numeric_limits<std::underlying_type_t<Attribute>>::digits;
+	constexpr std::size_t ATTRIBUTE_COUNT = std::numeric_limits<std::underlying_type_t<Attribute>>::digits;
 
 	constexpr std::array<std::uint8_t, ATTRIBUTE_COUNT> ATTRIBUTE_ANSI_CODES = {
 		1,	// bold
