@@ -120,6 +120,6 @@ namespace honesty::trace
 		}
 
 	private:
-		[[no_unique_address]] TracerOptions options_;
+		[[no_unique_address, maybe_unused]] TracerOptions options_;
 	};
 }

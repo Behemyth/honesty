@@ -3,6 +3,7 @@ export module synodic.honesty.test.backend:test;
 import std;
 
 import function_ref;
+import generator;
 import inplace_vector;
 
 import synodic.honesty.metric;

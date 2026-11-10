@@ -10,7 +10,7 @@ import :types;
 
 namespace honesty::trace
 {
-	class Sink;
+	export class Sink;
 
 	/**
 	 * @brief The collected data of a span. Meant to be a small size and efficient to process in bulk numbers
