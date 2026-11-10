@@ -1,6 +1,7 @@
 import std;
 import synodic.honesty.test;
 import synodic.honesty.metric;
+import synodic.periapsis;
 
 using namespace honesty::test;
 using namespace honesty::test::literals;

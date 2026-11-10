@@ -95,7 +95,7 @@ namespace
 			co_yield "noop_context_guard"_test = [](const Requirements& requirements)
 			{
 				// NoopContextGuard should be constexpr constructible
-				constexpr honesty::trace::NoopContextGuard guard;
+				[[maybe_unused]] constexpr honesty::trace::NoopContextGuard guard;
 				// If we reach here, test passes
 				requirements.Expect(true);
 			};

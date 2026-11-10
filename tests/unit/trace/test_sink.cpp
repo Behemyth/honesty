@@ -178,13 +178,16 @@ namespace
 				auto otelSink = std::make_unique<honesty::trace::OTelSink>();
 				otelSink->InitWithOStreamExporter();
 
-				// Create multiple spans
+				// Create multiple spans. A span refers to its name, so the names must outlive the spans.
+				std::array<std::string, 3> names;
 				std::vector<honesty::trace::SpanData> spans;
 
 				for (int i = 0; i < 3; ++i)
 				{
+					names[static_cast<std::size_t>(i)] = "span_" + std::to_string(i);
+
 					honesty::trace::SpanData data;
-					data.name = "span_" + std::to_string(i);
+					data.name = names[static_cast<std::size_t>(i)];
 					data.startTime = std::chrono::steady_clock::now();
 					data.endTime = data.startTime + std::chrono::milliseconds(i * 10);
 					data.status = honesty::trace::SpanStatus::OK;

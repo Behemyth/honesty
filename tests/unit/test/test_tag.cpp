@@ -114,7 +114,7 @@ namespace
 					const Test test = TODO / "test"_tag / "inner"_test = [](const Requirements&)
 					{
 					};
-					requirements.ExpectEquals(test.Tags().size(), 2);
+					requirements.ExpectEquals(test.Tags().size(), std::size_t{2});
 				}
 			};
 
@@ -133,7 +133,7 @@ namespace
 				constexpr auto combined = Tag("mytest") / SKIP;
 				requirements.Expect(combined == SKIP);
 				requirements.Expect(combined == "mytest");
-				requirements.ExpectEquals(combined.Size(), 2);
+				requirements.ExpectEquals(combined.Size(), std::size_t{2});
 			};
 
 			co_yield "todo"_test = [](const Requirements& requirements)
@@ -146,7 +146,7 @@ namespace
 				constexpr auto combined = Tag("incomplete") / TODO;
 				requirements.Expect(combined == TODO);
 				requirements.Expect(combined == "incomplete");
-				requirements.ExpectEquals(combined.Size(), 2);
+				requirements.ExpectEquals(combined.Size(), std::size_t{2});
 			};
 		});
 	SuiteRegistrar _(SUITE);

@@ -8,7 +8,7 @@ namespace
 {
 	constexpr Suite SUITE(
 		"suite",
-		[](const Fixture& fixture) -> Generator
+		[](const Fixture&) -> Generator
 		{
 			co_yield "name"_test = [&](const Requirements&)
 			{

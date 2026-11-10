@@ -17,4 +17,4 @@ commit = "9d467b651306db98fdd8209d448e369404e9a38f"
 [[packages]]
 name = "periapsis"
 repository = "Behemyth/periapsis"
-commit = "75f7ab9a620c82964f13b5457d247f04d0c7a99b"
+commit = "13706fa93953d02b4ba592309fbe4348e6fae2ec"

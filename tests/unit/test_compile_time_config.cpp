@@ -46,27 +46,25 @@ namespace
 
 			co_yield "log_level_filtering"_test = [](const Requirements& requirements)
 			{
+				// A discarded branch of a non-template is still checked, so each assertion carries its condition
+
 				// When CompileTimeLogLevel is TRACE (default), all levels should be enabled
-				if constexpr (honesty::log::CompileTimeLogLevel == honesty::log::LevelType::TRACE)
-				{
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::TRACE));
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::DEBUG));
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::INFO));
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::WARNING));
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::ERROR));
-					static_assert(honesty::log::IsLevelEnabled(honesty::log::LevelType::CRITICAL));
-				}
+				constexpr bool allLevels = honesty::log::CompileTimeLogLevel == honesty::log::LevelType::TRACE;
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::TRACE));
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::DEBUG));
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::INFO));
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::WARNING));
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::ERROR));
+				static_assert(!allLevels || honesty::log::IsLevelEnabled(honesty::log::LevelType::CRITICAL));
 
 				// When CompileTimeLogLevel is OFF, nothing should be enabled
-				if constexpr (honesty::log::CompileTimeLogLevel == honesty::log::LevelType::OFF)
-				{
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::TRACE));
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::DEBUG));
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::INFO));
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::WARNING));
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::ERROR));
-					static_assert(!honesty::log::IsLevelEnabled(honesty::log::LevelType::CRITICAL));
-				}
+				constexpr bool noLevels = honesty::log::CompileTimeLogLevel == honesty::log::LevelType::OFF;
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::TRACE));
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::DEBUG));
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::INFO));
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::WARNING));
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::ERROR));
+				static_assert(!noLevels || !honesty::log::IsLevelEnabled(honesty::log::LevelType::CRITICAL));
 
 				requirements.Expect(true);
 			};
@@ -119,14 +117,14 @@ namespace
 				{
 					// When enabled, CreateSpan() returns a real Span
 					auto span = tracer.CreateSpan("test");
-					static_assert(std::is_same_v<decltype(span), honesty::Span>);
+					static_assert(!honesty::trace::TracingEnabled || std::is_same_v<decltype(span), honesty::Span>);
 					requirements.Expect(span.Data().traceID.IsValid());
 				}
 				else
 				{
 					// When disabled, CreateSpan() returns NoopSpan
 					auto span = tracer.CreateSpan("test");
-					static_assert(std::is_same_v<decltype(span), honesty::NoopSpan>);
+					static_assert(honesty::trace::TracingEnabled || std::is_same_v<decltype(span), honesty::NoopSpan>);
 					requirements.Expect(true);
 				}
 			};

@@ -25,7 +25,7 @@ namespace
 				{
 					// When disabled, we get NoopSpan
 					auto span = tracer.CreateSpan("test_span");
-					static_assert(std::is_same_v<decltype(span), honesty::NoopSpan>);
+					static_assert(honesty::trace::TracingEnabled || std::is_same_v<decltype(span), honesty::NoopSpan>);
 					requirements.Expect(true);
 				}
 			};

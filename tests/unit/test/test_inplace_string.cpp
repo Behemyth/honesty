@@ -16,17 +16,17 @@ namespace
 				{
 					peri::InplaceString str('t', 'e', 's', 't');
 
-					requirements.ExpectEquals(str.size(), 4);
+					requirements.ExpectEquals(str.size(), std::size_t{4});
 					requirements.ExpectEquals(str.view(), "test");
 				}
 				{
 					peri::InplaceString str("test");
-					requirements.ExpectEquals(str.size(), 4);
+					requirements.ExpectEquals(str.size(), std::size_t{4});
 					requirements.ExpectEquals(str.view(), "test");
 				}
 				{
 					peri::InplaceString<5> str(std::string_view("test"));
-					requirements.ExpectEquals(str.size(), 4);
+					requirements.ExpectEquals(str.size(), std::size_t{4});
 					requirements.ExpectEquals(str.view(), "test");
 				}
 			};
@@ -37,7 +37,7 @@ namespace
 
 				str = "test";
 
-				requirements.ExpectEquals(str.size(), 4);
+				requirements.ExpectEquals(str.size(), std::size_t{4});
 				requirements.ExpectEquals(str.view(), "test");
 			};
 		});

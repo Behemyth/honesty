@@ -30,7 +30,7 @@ namespace
 				else
 				{
 					// When disabled, we get NoopSpan
-					static_assert(std::is_same_v<decltype(span), honesty::NoopSpan>);
+					static_assert(honesty::trace::TracingEnabled || std::is_same_v<decltype(span), honesty::NoopSpan>);
 				}
 			};
 
@@ -63,8 +63,8 @@ namespace
 				}
 				else
 				{
-					static_assert(std::is_same_v<decltype(span), honesty::NoopSpan>);
-					static_assert(std::is_same_v<decltype(guard), honesty::trace::NoopContextGuard>);
+					static_assert(honesty::trace::TracingEnabled || std::is_same_v<decltype(span), honesty::NoopSpan>);
+					static_assert(honesty::trace::TracingEnabled || std::is_same_v<decltype(guard), honesty::trace::NoopContextGuard>);
 				}
 			};
 		});

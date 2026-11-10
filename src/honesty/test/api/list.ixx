@@ -81,7 +81,7 @@ namespace honesty::test::api
 
 		std::array<Reporter*, 1> reporters{ &reporter };
 
-		ExecuteResult executeResult = Execute(executeParameters, runner, reporters, logger);
+		[[maybe_unused]] const ExecuteResult executeResult = Execute(executeParameters, runner, reporters, logger);
 
 		ListResult result;
 
