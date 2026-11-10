@@ -116,7 +116,8 @@ The `ResourceCollector` class provides point-in-time sampling of system resource
 | Platform | CPU Measurement | Memory Measurement |
 |----------|-----------------|-------------------|
 | Windows | `GetProcessTimes` | `GetProcessMemoryInfo` |
-| Linux | Not yet implemented | Not yet implemented |
+| Linux | `getrusage` | `VmRSS` and `VmHWM` in `/proc/self/status` |
+| macOS | `getrusage` | `task_info` |
 
 ### Basic Usage
 
