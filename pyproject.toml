@@ -23,7 +23,7 @@ test = ["pytest>=9.1.1", "pytest-cov>=7.1.0", "pytest-mock>=3.15.1"]
 docs = ["zensical>=0.0.51"]
 config = ["copier>=9.17.0"]
 native = [
-    "cppython[cmake,conan,git] @ git+https://github.com/Behemyth/cppython.git@327d67e39293da93d27e458deb758a72ffa2a42a",
+    "cppython[cmake,conan,git] @ git+https://github.com/Behemyth/cppython.git@268338df7f625ed15c265c9baadfeb59a1778762",
     "ninja>=1.13.0",
 ]
 
