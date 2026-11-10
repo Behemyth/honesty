@@ -1,6 +1,6 @@
 /**
- * @file platform_linux.cxx
- * @brief Linux platform tuning stub for benchmark stability
+ * @file linux.cpp
+ * @brief Linux platform checks for benchmark stability
  *
  * Linux provides excellent tuning via external tools like `pyperf system tune`.
  * This implementation provides warnings and recommendations rather than
@@ -56,9 +56,7 @@ namespace honesty::metric
 		}
 
 		/// Check CPU governor for all cores
-		void CheckCpuGovernor(std::vector<std::string>& warnings, 
-		                       std::vector<std::string>& recommendations,
-		                       bool& recommendPyperf)
+		void CheckCpuGovernor(std::vector<std::string>& warnings, bool& recommendPyperf)
 		{
 			// Check first CPU's governor as representative
 			auto governor = ReadProcFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
@@ -71,9 +69,7 @@ namespace honesty::metric
 		}
 
 		/// Check for turbo boost status
-		void CheckTurboBoost(std::vector<std::string>& warnings,
-		                      std::vector<std::string>& recommendations,
-		                      bool& recommendPyperf)
+		void CheckTurboBoost(std::vector<std::string>& warnings, bool& recommendPyperf)
 		{
 			// Intel pstate driver
 			auto intelNoTurbo = ReadProcFile("/sys/devices/system/cpu/intel_pstate/no_turbo");
@@ -93,9 +89,7 @@ namespace honesty::metric
 		}
 
 		/// Check CPU frequency scaling
-		void CheckFrequencyScaling(std::vector<std::string>& warnings,
-		                            std::vector<std::string>& recommendations,
-		                            bool& recommendPyperf)
+		void CheckFrequencyScaling(std::vector<std::string>& warnings, bool& recommendPyperf)
 		{
 			auto minFreq = ReadProcFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
 			auto maxFreq = ReadProcFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
@@ -146,9 +140,9 @@ namespace honesty::metric
 			bool recommendPyperf = false;
 
 			// Gather stability information
-			CheckCpuGovernor(state.warnings, state.recommendations, recommendPyperf);
-			CheckTurboBoost(state.warnings, state.recommendations, recommendPyperf);
-			CheckFrequencyScaling(state.warnings, state.recommendations, recommendPyperf);
+			CheckCpuGovernor(state.warnings, recommendPyperf);
+			CheckTurboBoost(state.warnings, recommendPyperf);
+			CheckFrequencyScaling(state.warnings, recommendPyperf);
 
 			// Add pyperf recommendation if any issues found
 			if (recommendPyperf)

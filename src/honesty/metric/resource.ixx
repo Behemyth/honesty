@@ -4,8 +4,9 @@
  *
  * Provides point-in-time sampling of system resource usage (CPU, memory).
  * Platform-specific implementations use:
- * - Windows: Performance Data Helper (PDH) API
- * - Linux: /proc filesystem
+ * - Windows: process time and memory APIs
+ * - Linux: getrusage and the /proc filesystem
+ * - macOS: getrusage and task_info
  */
 
 export module synodic.honesty.metric:resource;
@@ -53,8 +54,9 @@ namespace honesty::metric
 	 * Each call to Sample() returns the current resource state.
 	 *
 	 * Platform implementations:
-	 * - Windows: Uses PDH (Performance Data Helper) for CPU, GetProcessMemoryInfo for memory
-	 * - Linux: Reads /proc/self/stat for CPU, /proc/self/statm for memory
+	 * - Windows: Uses GetProcessTimes for CPU, GetProcessMemoryInfo for memory
+	 * - Linux: Uses getrusage for CPU, /proc/self/status for memory
+	 * - macOS: Uses getrusage for CPU, task_info for memory
 	 *
 	 * Thread Safety: Each thread should have its own ResourceCollector instance.
 	 * The collector maintains internal state for CPU calculation that is not thread-safe.
